@@ -1,3 +1,5 @@
+var google = google || {};
+
 var markers = new Array();
 
 function checkLegend() {
