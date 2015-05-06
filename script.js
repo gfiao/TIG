@@ -37,8 +37,9 @@ function bindInfoWindow(marker, map, infoWindow, html) {
 
 function initialize() {
     var mapOptions = {
-        zoom: 16,
-        center: new google.maps.LatLng(38.644711, -9.235200)
+        panControl: false,
+        zoom: 14,
+        center: new google.maps.LatLng(38.722531, -9.140249)
     };
 
     var infoWindow = new google.maps.InfoWindow({
@@ -108,7 +109,6 @@ function initialize() {
             map: map,
             title: "New Marker"
         });
-        //var form=document.getElementById("mar");
         var form = form_aux;
 
         var latf = form.elements[0];
@@ -118,8 +118,6 @@ function initialize() {
 
         bindInfoWindow(marker, map, infoWindow, form);
     });
-
-
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
