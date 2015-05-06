@@ -21,7 +21,10 @@ body {
 #legend {
     position: absolute;
     z-index: 99;
-    left: 40%;
-    top: 95%;
+    left: 35%;
+    top: 90%;
     background: white;
+    padding: 10px;
+    border: 1px grey solid;
+    border-radius: 4px 4px 4px 4px;
 }

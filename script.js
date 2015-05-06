@@ -59,26 +59,29 @@ function initialize() {
         for (var i = 0; i < markers.length; i++) {
             var name = markers[i].getAttribute("name");
             var type = markers[i].getAttribute("type");
+            var opening = markers[i].getAttribute("opening");
+            var closing = markers[i].getAttribute("closing");
             var point = new google.maps.LatLng(
                 parseFloat(markers[i].getAttribute("lat")),
                 parseFloat(markers[i].getAttribute("lng")));
-            var html = "<b>" + name + "</b> <br/>" + type;
+            var html = "<b>" + name + "</b> <br/>" + type + " <br/>Abertura: " + opening
+                        + " horas<br/>Fecho: " + closing + " horas";
 
             var image = 'http://labs.google.com/ridefinder/images/mm_20_red.png';
 
-            if (type == 'hotel') {
+            if (type == 'Hotel') {
                 image = 'http://labs.google.com/ridefinder/images/mm_20_red.png';
             }
-            else if (type == 'restaurante') {
+            else if (type == 'Restaurante') {
                 image = 'http://labs.google.com/ridefinder/images/mm_20_blue.png';
             }
-            else if (type == 'servicos') {
+            else if (type == 'Hostel') {
                 image = 'http://labs.google.com/ridefinder/images/mm_20_green.png';
             }
-            else if (type == 'transportes') {
+            else if (type == 'Monumento') {
                 image = 'http://labs.google.com/ridefinder/images/mm_20_yellow.png';
             }
-            else if (type == 'policia')
+            else if (type == 'Museu')
                 image = 'http://labs.google.com/ridefinder/images/mm_20_white.png';
 
             var marker = new google.maps.Marker({
