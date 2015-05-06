@@ -3,8 +3,6 @@ var markers = new Array();
 
 function checkLegend() {
 
-	//HUEHUEHEUHEUHEUHE
-
 }
 	
 	
