@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" type="text/css" href="css_p4.css">
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQCDQ0oaBknGBO2uhLI4I-nYawK0HEufU&sensor=TRUE">
+    </script>
+    <script type="text/javascript" src="script.js"></script>
+  </head>
+  <body>
+    <div id="map-canvas"/>
+	
+	<form id="mar" action="insert.php" method="post"> 
+		Latitude: <input type="text" name="lat" value="" /> 
+		Longitude: <input type="text" name="lng" value="" />
+		Nome: <input type="text" name="name" value=""/>
+		Categoria: <input type="text" name="type" value=""/>
+		<input type="submit" />
+	</form>
+	
+	
+	<form id="del" action="delete.php" method="post"> 
+		<input type="hidden" name="name" value="" /> 
+		<input type="submit" />
+	</form>
+	
+	<!-- Form da legenda do mapa, a seleccao da as categorias visiveis -->
+	<form id="legenda">
+	<img src="http://labs.google.com/ridefinder/images/mm_20_red.png" /> Hotel 
+	<input type="checkbox" name="type" value="hotel" checked="true" onchange="checkLegend()"/>
+	<img src="http://labs.google.com/ridefinder/images/mm_20_green.png" /> Servicos
+	<input type="checkbox" name="type" value="servicos" checked="true" onchange="checkLegend()"/>
+	<img src="http://labs.google.com/ridefinder/images/mm_20_white.png" /> Policia
+	<input type="checkbox" name="type" value="policia" checked="true" onchange="checkLegend()"/>
+	<img src="http://labs.google.com/ridefinder/images/mm_20_blue.png" /> Restaurante
+	<input type="checkbox" name="type" value="restaurantes" checked="true" onchange="checkLegend()"/>
+	<img src="http://labs.google.com/ridefinder/images/mm_20_yellow.png" /> Transportes
+	<input type="checkbox" name="type" value="transportes" checked="true" onchange="checkLegend()"/>
+	</form> 
+	
+  </body>
+</html>
