@@ -11,5 +11,5 @@ mysql_query("DELETE FROM markers WHERE name='$_POST[name]'");
 
 mysql_close($con);
 
-header('location: http://localhost/lab5.html');
+header('location: http://localhost/TIG_Projecto/index.html');
 ?>

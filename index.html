@@ -18,36 +18,62 @@
 
     <div id="legend">
         <label class="checkbox-inline">
-            <input type="checkbox" id="inlineCheckbox1" value="option1"> Monumentos
+            <input type="checkbox" id="Monumento" value="option1" checked> Monumentos
         </label>
         <label class="checkbox-inline">
-            <input type="checkbox" id="inlineCheckbox2" value="option2"> Hoteis
+            <input type="checkbox" id="Hotel" value="option2" checked> Hoteis
         </label>
         <label class="checkbox-inline">
-            <input type="checkbox" id="inlineCheckbox3" value="option3"> Restaurantes
+            <input type="checkbox" id="Restaurante" value="option3" checked> Restaurantes
         </label>
         <label class="checkbox-inline">
-            <input type="checkbox" id="inlineCheckbox4" value="option3"> Hostels
+            <input type="checkbox" id="Hostel" value="option3" checked> Hostels
         </label>
         <label class="checkbox-inline">
-            <input type="checkbox" id="inlineCheckbox5" value="option3"> Museus
+            <input type="checkbox" id="Museu" value="option3" checked> Museus
         </label>
     </div>
 </div>
 
-<!--<form id="mar" action="insert.php" method="post">-->
-<!--Latitude: <input type="text" name="lat" value=""/>-->
-<!--Longitude: <input type="text" name="lng" value=""/>-->
-<!--Nome: <input type="text" name="name" value=""/>-->
-<!--Categoria: <input type="text" name="type" value=""/>-->
-<!--<input type="submit"/>-->
-<!--</form>-->
+<form id="mar" action="insert.php" method="post">
+    <input type="text" name="lat" value="" style="display: none"/>
+    <input type="text" name="lng" value="" style="display: none"/>
+
+    <!--<div class="form-group">-->
+    Nome: <input type="text" class="form-control" name="name" value=""/>
+    <!--</div>-->
+
+    <!-- TODO: Fazer com dropdown box-->
+    <!--<div class="form-group">-->
+    Tipo: <input type="text" class="form-control" name="type" value=""/>
+    <!--</div>-->
+
+    <input type="text" name="city" value="" style="display: none"/>
+
+    <!--<div class="form-group">-->
+    Abertura: <input type="text" class="form-control" name="opening" value=""/>
+    <!--</div>-->
+
+    <!--<div class="form-group">-->
+    Fecho: <input type="text" class="form-control" name="closing" value=""/>
+    <!--</div>-->
+
+    <!--<div class="form-group">-->
+    Preço: <input type="text" class="form-control" name="price" value=""/>
+    <!--</div>-->
+
+    <!--<div class="form-group">-->
+    Descrição: <input type="text" class="form-control" name="description" value=""/>
+    <!--</div>-->
+
+    <input type="submit" class="btn btn-default"/>
+</form>
 
 
-<!--<form id="del" action="delete.php" method="post">-->
-<!--<input type="hidden" name="name" value=""/>-->
-<!--<input type="submit"/>-->
-<!--</form>-->
+<form id="del" action="delete.php" method="post">
+    <input type="hidden" name="name" value=""/>
+    <input type="submit"/>
+</form>
 
 <!-- Form da legenda do mapa, a seleccao da as categorias visiveis -->
 <!--<form id="legenda">-->

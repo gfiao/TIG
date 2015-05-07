@@ -1,12 +1,30 @@
 var google = google || {};
 
+//this array stores the xml done by xmloutdom.php
+var markersXML = new Array();
+
+//this array stores the markers as a marker object
 var markers = new Array();
+var geocoder = new google.maps.Geocoder();
 
-function checkLegend() {
-
-
-}
-
+//function checkLegend() {
+//
+//    $(":checkbox").change(function toggleGroup() {
+//        var id = this.id;
+//        if ($('#' + id).is(':checked')) {
+//            for (var i = 0; i < markers.length; i++) {
+//                if (markers[i].type == id)
+//                    markers[i].setVisible(true);
+//            }
+//        }
+//        else {
+//            for (var i = 0; i < markers.length; i++) {
+//                if (markers[i].type == id)
+//                    markers[i].setVisible(false);
+//            }
+//        }
+//    });
+//}
 
 function downloadUrl(url, callback) {
     var request = window.ActiveXObject ?
@@ -55,17 +73,17 @@ function initialize() {
 
     downloadUrl("xmloutdom.php", function (data) {
         var xml = data.responseXML;
-        markers = xml.documentElement.getElementsByTagName("marker");
-        for (var i = 0; i < markers.length; i++) {
-            var name = markers[i].getAttribute("name");
-            var type = markers[i].getAttribute("type");
-            var opening = markers[i].getAttribute("opening");
-            var closing = markers[i].getAttribute("closing");
+        markersXML = xml.documentElement.getElementsByTagName("marker");
+        for (var i = 0; i < markersXML.length; i++) {
+            var name = markersXML[i].getAttribute("name");
+            var type = markersXML[i].getAttribute("type");
+            var opening = markersXML[i].getAttribute("opening");
+            var closing = markersXML[i].getAttribute("closing");
             var point = new google.maps.LatLng(
-                parseFloat(markers[i].getAttribute("lat")),
-                parseFloat(markers[i].getAttribute("lng")));
+                parseFloat(markersXML[i].getAttribute("lat")),
+                parseFloat(markersXML[i].getAttribute("lng")));
             var html = "<b>" + name + "</b> <br/>" + type + " <br/>Abertura: " + opening
-                        + " horas<br/>Fecho: " + closing + " horas";
+                + " horas<br/>Fecho: " + closing + " horas";
 
             var image = 'http://labs.google.com/ridefinder/images/mm_20_red.png';
 
@@ -85,25 +103,29 @@ function initialize() {
                 image = 'http://labs.google.com/ridefinder/images/mm_20_white.png';
 
             var marker = new google.maps.Marker({
+                visible: true,
                 map: map,
                 position: point,
-                icon: image
+                icon: image,
+                type: markersXML[i].getAttribute("type")
             });
+            markers.push(marker);
             bindInfoWindow(marker, map, infoWindow, html);
 
-            google.maps.event.addListener(marker, 'dblclick', function (event) {
-                marker.setIcon('http://labs.google.com/ridefinder/images/mm_20_black.png');
-
-                var form = form_del;
-
-                var namePost = form.elements[0];
-                namePost.value = name;
-
-                bindInfoWindow(marker, map, infoWindow, form);
-                //form.submit();
-
-            });
         }
+
+        google.maps.event.addListener(marker, 'dblclick', function (event) {
+            marker.setIcon('http://labs.google.com/ridefinder/images/mm_20_black.png');
+
+            var form = form_del;
+
+            var namePost = form.elements[0];
+            namePost.value = name;
+
+            bindInfoWindow(marker, map, infoWindow, form);
+            //form.submit();
+
+        });
     });
 
     google.maps.event.addListener(map, 'click', function (event) {
@@ -112,14 +134,48 @@ function initialize() {
             map: map,
             title: "New Marker"
         });
+
+
         var form = form_aux;
 
         var latf = form.elements[0];
         latf.value = event.latLng.lat();
         var lngf = form.elements[1];
         lngf.value = event.latLng.lng();
+        var formCity = form.elements[4];
+
+        var latlng = new google.maps.LatLng(latf.value, lngf.value);
+
+        geocoder.geocode({'latLng': latlng}, function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                if (results[1]) {
+                    formCity.value = results[1].formatted_address.split(",")[0];
+                } else {
+                    alert('No results found');
+                }
+            } else {
+                alert('Geocoder failed due to: ' + status);
+            }
+        });
+
 
         bindInfoWindow(marker, map, infoWindow, form);
+    });
+
+    $(":checkbox").change(function toggleGroup() {
+        var id = this.id;
+        if ($('#' + id).is(':checked')) {
+            for (var i = 0; i < markers.length; i++) {
+                if (markers[i].type == id)
+                    markers[i].setVisible(true);
+            }
+        }
+        else {
+            for (var i = 0; i < markers.length; i++) {
+                if (markers[i].type == id)
+                    markers[i].setVisible(false);
+            }
+        }
     });
 }
 
