@@ -28,3 +28,13 @@ body {
     border: 1px grey solid;
     border-radius: 4px 4px 4px 4px;
 }
+
+.menu {
+    position: absolute;
+    z-index: 99;
+    /*border: 1px black solid;*/
+
+    width: 25%;
+    top: 0;
+    left: 1%;
+}

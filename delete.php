@@ -5,7 +5,7 @@ if (!$con)
   die('Could not connect: ' . mysql_error());
   }
 
-mysql_select_db("tig", $con);
+mysql_select_db("projecto", $con);
 
 mysql_query("DELETE FROM markers WHERE name='$_POST[name]'");
 

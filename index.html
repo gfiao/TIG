@@ -8,6 +8,7 @@
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8KL9qp74_hs3An0lbsWqu_JY6tuXtWno&sensor=TRUE">
     </script>
     <script type="text/javascript" src="jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="script.js"></script>
 </head>
 <body>
@@ -34,6 +35,71 @@
         </label>
     </div>
 </div>
+
+
+<div class="panel-group menu" id="accordion" role="tablist" aria-multiselectable="true">
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingOne">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true"
+                   aria-controls="collapseOne">
+                    Caminho ótimo
+                </a>
+            </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+            <div class="panel-body">
+                Teste 1.
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingTwo">
+            <h4 class="panel-title">
+                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo"
+                   aria-expanded="false" aria-controls="collapseTwo">
+                    Caminho mais barato
+                </a>
+            </h4>
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+            <div class="panel-body">
+                Teste 2.
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingThree">
+            <h4 class="panel-title">
+                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree"
+                   aria-expanded="false" aria-controls="collapseThree">
+                    Filtro dinheiro
+                </a>
+            </h4>
+        </div>
+        <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+            <div class="panel-body">
+
+                <form class="form-inline">
+                    <div class="form-group">
+                        <label class="sr-only" for="priceButton">Amount (in euros)</label>
+
+                        <div class="input-group">
+                            <div class="input-group-addon">$</div>
+                            <input type="text" class="form-control" id="priceButton" placeholder="Preço">
+
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary"
+                            onclick="filterByPrice(document.getElementById('priceButton').value)">Filtrar
+                    </button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <form id="mar" action="insert.php" method="post">
     <input type="text" name="lat" value="" style="display: none"/>

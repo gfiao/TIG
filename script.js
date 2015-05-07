@@ -26,6 +26,18 @@ var geocoder = new google.maps.Geocoder();
 //    });
 //}
 
+function filterByPrice(price) {
+    if (price == "")
+        for (var i = 0; i < markers.length; i++)
+            markers[i].setVisible(true);
+    else
+        for (var i = 0; i < markers.length; i++)
+            if (parseInt(markers[i].price) > price)
+                markers[i].setVisible(false);
+
+
+}
+
 function downloadUrl(url, callback) {
     var request = window.ActiveXObject ?
         new ActiveXObject('Microsoft.XMLHTTP') :
@@ -55,6 +67,8 @@ function bindInfoWindow(marker, map, infoWindow, html) {
 
 function initialize() {
     var mapOptions = {
+        streetViewControl: false,
+        zoomControl: false,
         panControl: false,
         zoom: 14,
         center: new google.maps.LatLng(38.722531, -9.140249)
@@ -107,7 +121,8 @@ function initialize() {
                 map: map,
                 position: point,
                 icon: image,
-                type: markersXML[i].getAttribute("type")
+                type: markersXML[i].getAttribute("type"),
+                price: markersXML[i].getAttribute("price")
             });
             markers.push(marker);
             bindInfoWindow(marker, map, infoWindow, html);
@@ -123,7 +138,7 @@ function initialize() {
             namePost.value = name;
 
             bindInfoWindow(marker, map, infoWindow, form);
-            //form.submit();
+            form.submit();
 
         });
     });
@@ -158,10 +173,10 @@ function initialize() {
             }
         });
 
-
         bindInfoWindow(marker, map, infoWindow, form);
     });
 
+    //filters for the types of interest points
     $(":checkbox").change(function toggleGroup() {
         var id = this.id;
         if ($('#' + id).is(':checked')) {
