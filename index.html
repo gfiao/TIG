@@ -39,6 +39,27 @@
 
 <div class="panel-group menu" id="accordion" role="tablist" aria-multiselectable="true">
     <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingCities">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapseCities" aria-expanded="true"
+                   aria-controls="collapseOne">
+                    Cidades
+                </a>
+            </h4>
+        </div>
+        <div id="collapseCities" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingCities">
+            <div class="panel-body">
+
+                <select class="form-control">
+                    <option>Lisboa</option>
+                    <option>Porto</option>
+                    <option>Almada</option>
+                </select>
+
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
         <div class="panel-heading" role="tab" id="headingOne">
             <h4 class="panel-title">
                 <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true"
@@ -47,9 +68,15 @@
                 </a>
             </h4>
         </div>
-        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+        <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
             <div class="panel-body">
-                Teste 1.
+                <select multiple class="form-control">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                </select>
             </div>
         </div>
     </div>
