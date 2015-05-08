@@ -1,6 +1,6 @@
 var google = google || {};
 
-//this array stores the xml done by xmloutdom.php
+//this array stores the xml constructed by xmloutdom.php
 var markersXML = new Array();
 
 //this array stores the markers as a marker object
@@ -8,13 +8,19 @@ var markers = new Array();
 var geocoder = new google.maps.Geocoder();
 
 function filterByPrice(price) {
-    if (price == "")
+    if (price == "" || price == 0) {
+        for (var i = 0; i < markers.length; i++) {
+            if ($('#' + markers[i].type).is(':checked'))
+                markers[i].setVisible(true);
+        }
+    }
+    else {
         for (var i = 0; i < markers.length; i++)
-            markers[i].setVisible(true);
-    else
-        for (var i = 0; i < markers.length; i++)
-            if (parseInt(markers[i].price) > price)
+            if (parseInt(markers[i].price) <= price)
+                markers[i].setVisible(true);
+            else
                 markers[i].setVisible(false);
+    }
 }
 
 function downloadUrl(url, callback) {
@@ -43,6 +49,18 @@ function bindInfoWindow(marker, map, infoWindow, html) {
     });
 }
 
+function deleteMarker(marker, map, infoWindow, form) {
+    google.maps.event.addListener(marker, 'dblclick', function (event) {
+        marker.setIcon('http://labs.google.com/ridefinder/images/mm_20_black.png');
+
+        var namePost = form.elements[0];
+        namePost.value = marker.name;
+
+        bindInfoWindow(marker, map, infoWindow, form);
+        //form.submit();
+    });
+}
+
 
 function initialize() {
     var mapOptions = {
@@ -57,12 +75,10 @@ function initialize() {
         content: "Diversas cenas!"
     });
 
-    var form_aux = document.getElementById("mar");
-    var form_del = document.getElementById("del");
+    var form = document.getElementById("del");
 
     var map = new google.maps.Map(document.getElementById("map-canvas"),
         mapOptions);
-
 
     downloadUrl("xmloutdom.php", function (data) {
         var xml = data.responseXML;
@@ -100,26 +116,14 @@ function initialize() {
                 map: map,
                 position: point,
                 icon: image,
+                name: markersXML[i].getAttribute("name"),
                 type: markersXML[i].getAttribute("type"),
                 price: markersXML[i].getAttribute("price")
             });
             markers.push(marker);
             bindInfoWindow(marker, map, infoWindow, html);
-
+            deleteMarker(marker, map, infoWindow, form);
         }
-
-        google.maps.event.addListener(marker, 'dblclick', function (event) {
-            marker.setIcon('http://labs.google.com/ridefinder/images/mm_20_black.png');
-
-            var form = form_del;
-
-            var namePost = form.elements[0];
-            namePost.value = name;
-
-            bindInfoWindow(marker, map, infoWindow, form);
-            //form.submit();
-
-        });
     });
 
     google.maps.event.addListener(map, 'click', function (event) {
@@ -129,8 +133,14 @@ function initialize() {
             title: "New Marker"
         });
 
+        //google.maps.event.addListener(marker, "rightclick", function () {
+        //    // Add a alert: Are you sure you want to remove this marker?
+        //
+        //    marker.setMap(null);
+        //});
 
-        var form = form_aux;
+
+        var form = document.getElementById("mar");
 
         var latf = form.elements[0];
         latf.value = event.latLng.lat();
@@ -140,6 +150,7 @@ function initialize() {
 
         var latlng = new google.maps.LatLng(latf.value, lngf.value);
 
+        //TODO: corrigir localidade
         geocoder.geocode({'latLng': latlng}, function (results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 if (results[1]) {

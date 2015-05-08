@@ -11,6 +11,8 @@ $parnode = $dom->appendChild($node);
 // Opens a connection to a MySQL server
 
 $connection=mysql_connect ('localhost', $username, $password);
+$result = mysql_query('SET NAMES utf8');
+$result = mysql_query('SET CHARACTER SET utf8');
 if (!$connection) {  die('Not connected : ' . mysql_error());} 
 
 // Set the active MySQL database
