@@ -7,25 +7,6 @@ var markersXML = new Array();
 var markers = new Array();
 var geocoder = new google.maps.Geocoder();
 
-//function checkLegend() {
-//
-//    $(":checkbox").change(function toggleGroup() {
-//        var id = this.id;
-//        if ($('#' + id).is(':checked')) {
-//            for (var i = 0; i < markers.length; i++) {
-//                if (markers[i].type == id)
-//                    markers[i].setVisible(true);
-//            }
-//        }
-//        else {
-//            for (var i = 0; i < markers.length; i++) {
-//                if (markers[i].type == id)
-//                    markers[i].setVisible(false);
-//            }
-//        }
-//    });
-//}
-
 function filterByPrice(price) {
     if (price == "")
         for (var i = 0; i < markers.length; i++)
@@ -34,8 +15,6 @@ function filterByPrice(price) {
         for (var i = 0; i < markers.length; i++)
             if (parseInt(markers[i].price) > price)
                 markers[i].setVisible(false);
-
-
 }
 
 function downloadUrl(url, callback) {
@@ -138,7 +117,7 @@ function initialize() {
             namePost.value = name;
 
             bindInfoWindow(marker, map, infoWindow, form);
-            form.submit();
+            //form.submit();
 
         });
     });
