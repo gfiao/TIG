@@ -1,5 +1,7 @@
 var google = google || {};
 
+var globalmap;
+
 //this array stores the xml constructed by xmloutdom.php
 var markersXML = new Array();
 
@@ -21,6 +23,40 @@ function filterByPrice(price) {
             else
                 markers[i].setVisible(false);
     }
+}
+
+function panToCity(city) {
+    geocoder.geocode({'address': String(city)}, function (results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+            globalmap.setCenter(results[0].geometry.location);
+            //globalmap.fitBounds(results[0].geometry.viewport);
+        } else {
+            alert('Geocode was not successful for the following reason: ' + status);
+        }
+    });
+}
+
+function addMarkersToHTML() {
+    $.each(markers, function (i, marker) {
+        $('#optimal-path').append($('<option>', {
+            text: marker.name
+        }));
+    });
+}
+
+function getSWmarker() {
+    //var visibleMarkers = new Array();
+    //for (var i = 0; i < markers.length; i++) {
+    //    if (markers[i].visible)
+    //        visibleMarkers.push(markers[i]);
+    //}
+    //
+    //var marker = visibleMarkers[0];
+    //for (var i = 0; i < visibleMarkers.length; i++) {
+    //    var latlng = new google.maps.LatLng(visibleMarkers[i].position);
+    //
+    //}
+
 }
 
 function downloadUrl(url, callback) {
@@ -120,10 +156,12 @@ function initialize() {
                 type: markersXML[i].getAttribute("type"),
                 price: markersXML[i].getAttribute("price")
             });
+            globalmap = map;
             markers.push(marker);
             bindInfoWindow(marker, map, infoWindow, html);
             deleteMarker(marker, map, infoWindow, form);
         }
+        addMarkersToHTML();
     });
 
     google.maps.event.addListener(map, 'click', function (event) {
@@ -132,13 +170,6 @@ function initialize() {
             map: map,
             title: "New Marker"
         });
-
-        //google.maps.event.addListener(marker, "rightclick", function () {
-        //    // Add a alert: Are you sure you want to remove this marker?
-        //
-        //    marker.setMap(null);
-        //});
-
 
         var form = document.getElementById("mar");
 
