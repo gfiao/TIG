@@ -38,3 +38,10 @@ body {
     top: 2%;
     left: 1%;
 }
+
+#fullextent{
+    position: absolute;
+    z-index: 99;
+    bottom: 3%;
+    right: 1%;
+}

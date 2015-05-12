@@ -44,18 +44,14 @@ function addMarkersToHTML() {
     });
 }
 
-function getSWmarker() {
-    //var visibleMarkers = new Array();
-    //for (var i = 0; i < markers.length; i++) {
-    //    if (markers[i].visible)
-    //        visibleMarkers.push(markers[i]);
-    //}
-    //
-    //var marker = visibleMarkers[0];
-    //for (var i = 0; i < visibleMarkers.length; i++) {
-    //    var latlng = new google.maps.LatLng(visibleMarkers[i].position);
-    //
-    //}
+function fullextent() {
+    var bounds = new google.maps.LatLngBounds();
+    for (var i = 0; i < markers.length; i++) {
+        if (markers[i].visible)
+            bounds.extend(markers[i].position);
+    }
+
+    globalmap.fitBounds(bounds);
 
 }
 
