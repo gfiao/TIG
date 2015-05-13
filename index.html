@@ -112,7 +112,7 @@
 
                         <div class="input-group">
                             <div class="input-group-addon">$</div>
-                            <input type="number" class="form-control" id="priceButton" placeholder="Preço">
+                            <input type="number" class="form-control" id="priceButton" min="0" placeholder="Preço">
 
                         </div>
                     </div>
@@ -124,9 +124,24 @@
             </div>
         </div>
     </div>
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingFour">
+            <h4 class="panel-title">
+                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour"
+                   aria-expanded="false" aria-controls="collapseFour">
+                    Criar marcador novo
+                </a>
+            </h4>
+        </div>
+        <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+            <div class="panel-body">
+                Teste 4.
+            </div>
+        </div>
+    </div>
 </div>
 
-<form id="mar" action="insert.php" method="post">
+<form id="insert" action="insert.php" method="post">
     <input type="text" name="lat" value="" style="display: none"/>
     <input type="text" name="lng" value="" style="display: none"/>
 
@@ -163,7 +178,7 @@
 
 <form id="del" action="delete.php" method="post">
     <input type="hidden" name="name" value=""/>
-    <input type="submit"/>
+    <input type="submit" value="Remover" class="btn btn-default"/>
 </form>
 
 </body>
