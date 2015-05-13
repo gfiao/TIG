@@ -9,20 +9,50 @@ var markersXML = new Array();
 var markers = new Array();
 var geocoder = new google.maps.Geocoder();
 
+var types = new Array();
+
 var newMarker = null;
 
-var formInsert = '<form id="mar" action="insert.php" method="post">' +
-    '<input type="text" name="lat" value="" style="display: none"/>' +
+var formInsert = '<input type="text" name="lat" value="" style="display: none"/>' +
     '<input type="text" name="lng" value="" style="display: none"/>' +
     'Nome: <input type="text" class="form-control" name="name" value=""/>' +
-    'Tipo: <input type="text" class="form-control" name="type" value=""/>' +
+        //'Tipo: <input type="text" class="form-control" name="type" value=""/>' +
+    'Tipo: <select id="select-type" class="form-control"> </select>' +
     '<input type="text" name="city" value="" style="display: none"/>' +
     'Abertura: <input type="text" class="form-control" name="opening" value=""/>' +
     'Fecho: <input type="text" class="form-control" name="closing" value=""/>' +
     'Preço: <input type="text" class="form-control" name="price" value=""/>' +
     'Descrição: <input type="text" class="form-control" name="description" value=""/>' +
-    '<input type="submit" class="btn btn-default"/> </form>';
+    '<input type="submit" class="btn btn-default"/>' +
+    '<input type="button" value="Cancelar" class="btn btn-default" onclick="removeNewMarker();checkNewMarker()"/></form>';
 
+
+function buildInsertForm() {
+    console.log(types);
+    for (var i = 0; i < types.length; i++) {
+        $('#select-type').append($('<option>', {
+            text: String(types[i]),
+            value: types[i]
+        }));
+    }
+}
+
+//checks if newMarker is null or not
+//to be called in the html
+function removeNewMarker() {
+    newMarker.setMap(null);
+    newMarker = null;
+}
+
+function checkNewMarker() {
+    if (newMarker == null) {
+        $("#insert").html("<p>Escolha um local no mapa para inserir.</p>");
+    }
+    else {
+        $("#insert").html(formInsert);
+        buildInsertForm();
+    }
+}
 
 function filterByPrice(price) {
     if (price == "" || price == 0) {
@@ -44,7 +74,6 @@ function panToCity(city) {
     geocoder.geocode({'address': String(city)}, function (results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
             globalmap.setCenter(results[0].geometry.location);
-            //globalmap.fitBounds(results[0].geometry.viewport);
         } else {
             alert('Geocode was not successful for the following reason: ' + status);
         }
@@ -175,7 +204,17 @@ function initialize() {
         addMarkersToHTML();
     });
 
+    downloadUrl("xmltypes.php", function (data) {
+        var xml = data.responseXML;
+        var typesXML = xml.documentElement.getElementsByTagName("type");
+        for (var i = 0; i < typesXML.length; i++) {
+            types.push(typesXML[i].getAttribute("type"));
+        }
+    });
+
     google.maps.event.addListener(map, 'click', function (event) {
+        //buildInsertForm();
+        //$("#insert").html(formInsert);
         if (newMarker == null) {
             newMarker = new google.maps.Marker({
                 position: event.latLng,
@@ -187,25 +226,14 @@ function initialize() {
             newMarker.setMap(null);
             newMarker.position = event.latLng;
             newMarker.setMap(map);
-
         }
 
-        var form = document.getElementById("mar");
-
-        var latf = form.elements[0];
-        latf.value = event.latLng.lat();
-        var lngf = form.elements[1];
-        lngf.value = event.latLng.lng();
-        var formCity = form.elements[4];
-
-        var latlng = new google.maps.LatLng(latf.value, lngf.value);
-
-
         //TODO: corrigir localidade
-        geocoder.geocode({'latLng': marker.position}, function (results, status) {
+        var city;
+        geocoder.geocode({'latLng': latlng}, function (results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 if (results[1]) {
-                    formCity.value = results[1].formatted_address.split(",")[0];
+                    city = results[1].formatted_address.split(",")[0];
                 } else {
                     alert('No results found');
                 }
@@ -214,8 +242,21 @@ function initialize() {
             }
         });
 
+        console.log(document.getElementById("insert"));
 
-        bindInfoWindow(newMarker, map, infoWindow, formInsert);
+        var form = document.getElementById("insert");
+
+        var latf = form.elements[0];
+        latf.value = event.latLng.lat();
+        var lngf = form.elements[1];
+        lngf.value = event.latLng.lng();
+        var formCity = form.elements[4];
+        formCity.value = city;
+
+        var latlng = new google.maps.LatLng(latf.value, lngf.value);
+
+
+        bindInfoWindow(newMarker, map, infoWindow, form);
     });
 
     //filters for the types of interest points
@@ -234,6 +275,7 @@ function initialize() {
             }
         }
     });
+
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
