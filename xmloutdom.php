@@ -37,9 +37,9 @@ header("Content-type: text/xml");
 while ($row = @mysql_fetch_assoc($result)){  
   // ADD TO XML DOCUMENT NODE  
   $node = $dom->createElement("marker");  
-  $newnode = $parnode->appendChild($node);   
+  $newnode = $parnode->appendChild($node);
+  $newnode->setAttribute("id",$row['id']);
   $newnode->setAttribute("name",$row['name']);
-  //$newnode->setAttribute("address", $row['address']);  
   $newnode->setAttribute("lat", $row['lat']);  
   $newnode->setAttribute("lng", $row['lng']);  
   $newnode->setAttribute("type", $row['type']);

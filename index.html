@@ -5,7 +5,7 @@
     <link rel="stylesheet" type="text/css" href="index.css">
     <link rel="stylesheet" type="text/css" href="bootstrap-3.3.4-dist/css/bootstrap.min.css">
     <script type="text/javascript"
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8KL9qp74_hs3An0lbsWqu_JY6tuXtWno&sensor=TRUE">
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8KL9qp74_hs3An0lbsWqu_JY6tuXtWno">
     </script>
     <script type="text/javascript" src="jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
@@ -136,39 +136,6 @@
         <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
             <div id="insertDiv" class="panel-body">
                 <form id="insert" action="insert.php" method="post">
-                    <!--<input type="text" name="lat" value="" style="display: none"/>-->
-                    <!--<input type="text" name="lng" value="" style="display: none"/>-->
-
-                    <!--&lt;!&ndash;<div class="form-group">&ndash;&gt;-->
-                    <!--Nome: <input type="text" class="form-control" name="name" value=""/>-->
-                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-
-                    <!--&lt;!&ndash; TODO: Fazer com dropdown box&ndash;&gt;-->
-                    <!--&lt;!&ndash;<div class="form-group">&ndash;&gt;-->
-                    <!--Tipo: <input type="text" class="form-control" name="type" value=""/>-->
-                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-
-                    <!--<input type="text" name="city" value="" style="display: none"/>-->
-
-                    <!--&lt;!&ndash;<div class="form-group">&ndash;&gt;-->
-                    <!--Abertura: <input type="text" class="form-control" name="opening" value=""/>-->
-                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-
-                    <!--&lt;!&ndash;<div class="form-group">&ndash;&gt;-->
-                    <!--Fecho: <input type="text" class="form-control" name="closing" value=""/>-->
-                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-
-                    <!--&lt;!&ndash;<div class="form-group">&ndash;&gt;-->
-                    <!--Preço: <input type="text" class="form-control" name="price" value=""/>-->
-                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-
-                    <!--&lt;!&ndash;<div class="form-group">&ndash;&gt;-->
-                    <!--Descrição: <input type="text" class="form-control" name="description" value=""/>-->
-                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-
-                    <!--<input type="submit" class="btn btn-default"/>-->
-                    <!--<input type="button" value="Cancelar" class="btn btn-default"-->
-                    <!--onclick="removeNewMarker();checkNewMarker()"/>-->
                 </form>
             </div>
         </div>
@@ -209,6 +176,46 @@
 <!--<input type="submit" class="btn btn-default"/>-->
 <!--</form>-->
 
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Atualizar marcador</h4>
+            </div>
+            <div class="modal-body">
+
+                <form id="update" action="update.php" method="post">
+                    <input type="text" name="lat" value="" style="display: none"/>
+                    <input type="text" name="lng" value="" style="display: none"/>
+
+                    Nome: <input type="text" class="form-control" name="name" value=""/>
+
+                    Tipo: <select id="select-type-update" name="type" class="form-control"> </select>
+
+                    <input type="text" name="city" value="" style="display: none"/>
+
+                    Abertura: <input type="time" class="form-control" name="opening" value=""/>
+
+                    Fecho: <input type="time" class="form-control" name="closing" value=""/>
+
+                    Preço: <input type="number" class="form-control" name="price" value=""/>
+
+                    Descrição: <input type="text" class="form-control" name="description" value=""/>
+
+                    <input type="submit" class="btn btn-default"/>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-default">Gravar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <form id="del" action="delete.php" method="post">
     <input type="hidden" name="name" value=""/>

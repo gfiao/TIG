@@ -17,20 +17,28 @@ var formInsert = '<input type="text" name="lat" value="" style="display: none"/>
     '<input type="text" name="lng" value="" style="display: none"/>' +
     'Nome: <input type="text" class="form-control" name="name" value=""/>' +
         //'Tipo: <input type="text" class="form-control" name="type" value=""/>' +
-    'Tipo: <select id="select-type" class="form-control"> </select>' +
-    '<input type="text" name="city" value="" style="display: none"/>' +
-    'Abertura: <input type="text" class="form-control" name="opening" value=""/>' +
-    'Fecho: <input type="text" class="form-control" name="closing" value=""/>' +
-    'Preço: <input type="text" class="form-control" name="price" value=""/>' +
+    'Tipo: <select id="select-type" name="type" class="form-control"> </select>' +
+    '<input type="text" name="city" value="" />' +
+    'Abertura: <input type="time" class="form-control" name="opening" value=""/>' +
+    'Fecho: <input type="time" class="form-control" name="closing" value=""/>' +
+    'Preço: <input type="number" class="form-control" name="price" value="" min="0"/>' +
     'Descrição: <input type="text" class="form-control" name="description" value=""/>' +
     '<input type="submit" class="btn btn-default"/>' +
     '<input type="button" value="Cancelar" class="btn btn-default" onclick="removeNewMarker();checkNewMarker()"/></form>';
 
 
 function buildInsertForm() {
-    console.log(types);
     for (var i = 0; i < types.length; i++) {
         $('#select-type').append($('<option>', {
+            text: String(types[i]),
+            value: types[i]
+        }));
+    }
+}
+
+function buildUpdateForm() {
+    for (var i = 0; i < types.length; i++) {
+        $('#select-type-update').append($('<option>', {
             text: String(types[i]),
             value: types[i]
         }));
@@ -160,6 +168,7 @@ function initialize() {
         var xml = data.responseXML;
         markersXML = xml.documentElement.getElementsByTagName("marker");
         for (var i = 0; i < markersXML.length; i++) {
+            var id = markersXML[i].getAttribute("id");
             var name = markersXML[i].getAttribute("name");
             var type = markersXML[i].getAttribute("type");
             var opening = markersXML[i].getAttribute("opening");
@@ -167,8 +176,20 @@ function initialize() {
             var point = new google.maps.LatLng(
                 parseFloat(markersXML[i].getAttribute("lat")),
                 parseFloat(markersXML[i].getAttribute("lng")));
+            var price = markersXML[i].getAttribute("price");
+            var description = markersXML[i].getAttribute("description");
+
             var html = "<b>" + name + "</b> <br/>" + type + " <br/>Abertura: " + opening
                 + " horas<br/>Fecho: " + closing + " horas";
+            if (price != 0)
+                html += "<br/>Preço: " + price + "€";
+            if (description != "")
+                html += "<br\>Descrição: " + description;
+            html += '<br\>' +
+                '<button type="button" class="btn btn-default" data-toggle="modal" ' +
+                'data-target="#myModal" onclick="buildUpdateForm()">' +
+                'Modificar' +
+                '</button>';
 
             var image = 'http://labs.google.com/ridefinder/images/mm_20_red.png';
 
@@ -192,9 +213,11 @@ function initialize() {
                 map: map,
                 position: point,
                 icon: image,
-                name: markersXML[i].getAttribute("name"),
-                type: markersXML[i].getAttribute("type"),
-                price: markersXML[i].getAttribute("price")
+                id: id,
+                name: name,
+                type: type,
+                price: price,
+                description: description
             });
             globalmap = map;
             markers.push(marker);
@@ -228,22 +251,6 @@ function initialize() {
             newMarker.setMap(map);
         }
 
-        //TODO: corrigir localidade
-        var city;
-        geocoder.geocode({'latLng': latlng}, function (results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-                if (results[1]) {
-                    city = results[1].formatted_address.split(",")[0];
-                } else {
-                    alert('No results found');
-                }
-            } else {
-                alert('Geocoder failed due to: ' + status);
-            }
-        });
-
-        console.log(document.getElementById("insert"));
-
         var form = document.getElementById("insert");
 
         var latf = form.elements[0];
@@ -251,9 +258,20 @@ function initialize() {
         var lngf = form.elements[1];
         lngf.value = event.latLng.lng();
         var formCity = form.elements[4];
-        formCity.value = city;
 
-        var latlng = new google.maps.LatLng(latf.value, lngf.value);
+        //TODO: corrigir localidade
+        geocoder.geocode({'latLng': newMarker.position}, function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                if (results[1]) {
+                    console.log(results);
+                    formCity.value = results[1].formatted_address.split(",")[0];
+                } else {
+                    alert('No results found');
+                }
+            } else {
+                alert('Geocoder failed due to: ' + status);
+            }
+        });
 
 
         bindInfoWindow(newMarker, map, infoWindow, form);
