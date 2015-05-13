@@ -9,6 +9,21 @@ var markersXML = new Array();
 var markers = new Array();
 var geocoder = new google.maps.Geocoder();
 
+var newMarker = null;
+
+var formInsert = '<form id="mar" action="insert.php" method="post">' +
+    '<input type="text" name="lat" value="" style="display: none"/>' +
+    '<input type="text" name="lng" value="" style="display: none"/>' +
+    'Nome: <input type="text" class="form-control" name="name" value=""/>' +
+    'Tipo: <input type="text" class="form-control" name="type" value=""/>' +
+    '<input type="text" name="city" value="" style="display: none"/>' +
+    'Abertura: <input type="text" class="form-control" name="opening" value=""/>' +
+    'Fecho: <input type="text" class="form-control" name="closing" value=""/>' +
+    'Preço: <input type="text" class="form-control" name="price" value=""/>' +
+    'Descrição: <input type="text" class="form-control" name="description" value=""/>' +
+    '<input type="submit" class="btn btn-default"/> </form>';
+
+
 function filterByPrice(price) {
     if (price == "" || price == 0) {
         for (var i = 0; i < markers.length; i++) {
@@ -161,11 +176,19 @@ function initialize() {
     });
 
     google.maps.event.addListener(map, 'click', function (event) {
-        var marker = new google.maps.Marker({
-            position: event.latLng,
-            map: map,
-            title: "New Marker"
-        });
+        if (newMarker == null) {
+            newMarker = new google.maps.Marker({
+                position: event.latLng,
+                map: map,
+                title: "New Marker"
+            });
+        }
+        else {
+            newMarker.setMap(null);
+            newMarker.position = event.latLng;
+            newMarker.setMap(map);
+
+        }
 
         var form = document.getElementById("mar");
 
@@ -177,8 +200,9 @@ function initialize() {
 
         var latlng = new google.maps.LatLng(latf.value, lngf.value);
 
+
         //TODO: corrigir localidade
-        geocoder.geocode({'latLng': latlng}, function (results, status) {
+        geocoder.geocode({'latLng': marker.position}, function (results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 if (results[1]) {
                     formCity.value = results[1].formatted_address.split(",")[0];
@@ -190,7 +214,8 @@ function initialize() {
             }
         });
 
-        bindInfoWindow(marker, map, infoWindow, form);
+
+        bindInfoWindow(newMarker, map, infoWindow, formInsert);
     });
 
     //filters for the types of interest points
