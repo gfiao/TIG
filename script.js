@@ -13,6 +13,8 @@ var types = new Array();
 
 var newMarker = null;
 
+var currentMarker = null;
+
 var formInsert = '<input type="text" name="lat" value="" style="display: none"/>' +
     '<input type="text" name="lng" value="" style="display: none"/>' +
     'Nome: <input type="text" class="form-control" name="name" value=""/>' +
@@ -37,12 +39,37 @@ function buildInsertForm() {
 }
 
 function buildUpdateForm() {
-    for (var i = 0; i < types.length; i++) {
-        $('#select-type-update').append($('<option>', {
-            text: String(types[i]),
-            value: types[i]
-        }));
-    }
+    if ($('#select-type-update option').length == 0)
+        for (var i = 0; i < types.length; i++) {
+            $('#select-type-update').append($('<option>', {
+                text: String(types[i]),
+                value: types[i]
+            }));
+        }
+
+    var form = document.getElementById("update");
+
+    //TODO: muda-se a posição?
+    var name = form.elements[2];
+    name.value = currentMarker.name;
+
+    var type = form.elements[3];
+    type.value = currentMarker.type;
+
+    var opening = form.elements[5];
+    opening.value = currentMarker.opening
+
+    var closing = form.elements[6];
+    closing.value = currentMarker.closing;
+
+    var price = form.elements[7];
+    price.value = currentMarker.price;
+
+    var description = form.elements[8];
+    description.value = currentMarker.description;
+
+    console.log(price.value);
+
 }
 
 //checks if newMarker is null or not
@@ -130,6 +157,7 @@ function bindInfoWindow(marker, map, infoWindow, html) {
     google.maps.event.addListener(marker, 'click', function () {
         infoWindow.setContent(html);
         infoWindow.open(map, marker);
+        currentMarker = marker;
     });
 }
 
@@ -216,6 +244,8 @@ function initialize() {
                 id: id,
                 name: name,
                 type: type,
+                opening: opening,
+                closing: closing,
                 price: price,
                 description: description
             });
