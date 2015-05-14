@@ -11,6 +11,8 @@ var geocoder = new google.maps.Geocoder();
 
 var types = new Array();
 
+var cities = new Array();
+
 var newMarker = null;
 
 var currentMarker = null;
@@ -49,7 +51,6 @@ function buildUpdateForm() {
 
     var form = document.getElementById("update");
 
-    //TODO: muda-se a posição?
     var name = form.elements[2];
     name.value = currentMarker.name;
 
@@ -67,9 +68,15 @@ function buildUpdateForm() {
 
     var description = form.elements[8];
     description.value = currentMarker.description;
+}
 
-    console.log(price.value);
-
+function buildCitySelect() {
+    for (var i = 0; i < cities.length; i++) {
+        $('#city-select').append($('<option>', {
+            text: String(cities[i]),
+            value: cities[i]
+        }));
+    }
 }
 
 //checks if newMarker is null or not
@@ -255,6 +262,7 @@ function initialize() {
             deleteMarker(marker, map, infoWindow, form);
         }
         addMarkersToHTML();
+        buildCitySelect();
     });
 
     downloadUrl("xmltypes.php", function (data) {
@@ -262,6 +270,14 @@ function initialize() {
         var typesXML = xml.documentElement.getElementsByTagName("type");
         for (var i = 0; i < typesXML.length; i++) {
             types.push(typesXML[i].getAttribute("type"));
+        }
+    });
+
+    downloadUrl("xmlcities.php", function (data) {
+        var xml = data.responseXML;
+        var citiesXML = xml.documentElement.getElementsByTagName("city");
+        for (var i = 0; i < citiesXML.length; i++) {
+            cities.push(citiesXML[i].getAttribute("city"));
         }
     });
 
