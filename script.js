@@ -180,6 +180,84 @@ function deleteMarker(marker, map, infoWindow, form) {
     });
 }
 
+function loadXML() {
+
+    var file = $('#xml_file').prop("files")[0].name;
+
+    $.ajax({
+        url: file,
+        dataType: "xml",
+        success: parseXML
+    });
+}
+
+function parseXML(xml) {
+    console.log(xml);
+    var markersXML = xml.documentElement.getElementsByTagName("marker");
+    for (var i = 0; i < markersXML.length; i++) {
+        console.log(markersXML[i]);
+        var name = markersXML[i].getAttribute("name");
+        var type = markersXML[i].getAttribute("type");
+        var opening = markersXML[i].getAttribute("opening");
+        var closing = markersXML[i].getAttribute("closing");
+        var point = new google.maps.LatLng(
+            parseFloat(markersXML[i].getAttribute("lat")),
+            parseFloat(markersXML[i].getAttribute("lng")));
+        var price = markersXML[i].getAttribute("price");
+        var description = markersXML[i].getAttribute("description");
+
+        var html = "<b>" + name + "</b> <br/>" + type + " <br/>Abertura: " + opening
+            + " horas<br/>Fecho: " + closing + " horas";
+        if (price != 0)
+            html += "<br/>Preço: " + price + "€";
+        if (description != "")
+            html += "<br\>Descrição: " + description;
+        html += '<br\>' +
+            '<button type="button" class="btn btn-default" data-toggle="modal" ' +
+            'data-target="#myModal" onclick="buildUpdateForm()">' +
+            'Modificar' +
+            '</button>';
+
+        var infoWindow = new google.maps.InfoWindow({
+            content: "Diversas cenas!"
+        });
+
+        var image = 'http://labs.google.com/ridefinder/images/mm_20_red.png';
+
+        if (type == 'Hotel') {
+            image = 'http://labs.google.com/ridefinder/images/mm_20_red.png';
+        }
+        else if (type == 'Restaurante') {
+            image = 'http://labs.google.com/ridefinder/images/mm_20_blue.png';
+        }
+        else if (type == 'Hostel') {
+            image = 'http://labs.google.com/ridefinder/images/mm_20_green.png';
+        }
+        else if (type == 'Monumento') {
+            image = 'http://labs.google.com/ridefinder/images/mm_20_yellow.png';
+        }
+        else if (type == 'Museu')
+            image = 'http://labs.google.com/ridefinder/images/mm_20_white.png';
+
+        var marker = new google.maps.Marker({
+            visible: true,
+            map: globalmap,
+            position: point,
+            icon: image,
+            name: name,
+            type: type,
+            opening: opening,
+            closing: closing,
+            price: price,
+            description: description
+        });
+
+        markers.push(marker);
+        bindInfoWindow(marker, globalmap, infoWindow, html);
+        //deleteMarker(marker, globalmap, infoWindow, form);
+    }
+}
+
 
 function initialize() {
     var mapOptions = {
@@ -340,6 +418,9 @@ function initialize() {
         }
     });
 
+    //$('#loadXML-button').click(function () {
+    //    $('#xml_file').click();
+    //});
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);

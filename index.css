@@ -45,3 +45,17 @@ body {
     bottom: 3%;
     right: 1%;
 }
+
+#backup{
+    position: absolute;
+    z-index: 99;
+    bottom: 10%;
+    right: 1%;
+}
+
+#loadXML{
+    position: absolute;
+    z-index: 99;
+    bottom: 17%;
+    right: 1%;
+}
