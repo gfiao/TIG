@@ -196,6 +196,8 @@ function parseXML(xml) {
     var markersXML = xml.documentElement.getElementsByTagName("marker");
     for (var i = 0; i < markersXML.length; i++) {
         console.log(markersXML[i]);
+        var city = markersXML[i].getAttribute("city");
+        console.log(city);
         var name = markersXML[i].getAttribute("name");
         var type = markersXML[i].getAttribute("type");
         var opening = markersXML[i].getAttribute("opening");
@@ -251,10 +253,28 @@ function parseXML(xml) {
             price: price,
             description: description
         });
-
         markers.push(marker);
         bindInfoWindow(marker, globalmap, infoWindow, html);
-        //deleteMarker(marker, globalmap, infoWindow, form);
+        deleteMarker(marker, globalmap, infoWindow, document.getElementById("del"));
+
+        $.ajax({
+            url: 'insert.php',
+            type: 'post',
+            data: {
+                "type": type,
+                "city": city,
+                "name": name,
+                "lat": point.lat(),
+                "lng": point.lng(),
+                "price": price,
+                "opening": opening,
+                "closing": closing,
+                "description": description
+            },
+            success: function (response) {
+                alert(response);
+            }
+        });
     }
 }
 
