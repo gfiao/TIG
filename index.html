@@ -41,7 +41,7 @@
     </div>
 
     <div id="backup">
-        <button type="button" class="btn btn-default">Backup</button>
+        <button type="button" class="btn btn-default" onclick="backup()">Backup</button>
     </div>
 
     <div id="fullextent">
@@ -144,7 +144,21 @@
         </div>
         <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
             <div id="insertDiv" class="panel-body">
+                <p id="noMarkerMsg">Escolha um local no mapa para inserir.</p>
+
                 <form id="insert" action="insert.php" method="post">
+                    <input type="text" name="lat" value="" style="display: none"/>
+                    <input type="text" name="lng" value="" style="display: none"/>
+                    Nome: <input type="text" class="form-control" name="name" value=""/>
+                    Tipo: <select id="select-type" name="type" class="form-control"> </select>
+                    <input type="text" name="city" value=""/>
+                    Abertura: <input type="time" class="form-control" name="opening" value=""/>
+                    Fecho: <input type="time" class="form-control" name="closing" value=""/>
+                    Preço: <input type="number" class="form-control" name="price" value="" min="0"/>
+                    Descrição: <input type="text" class="form-control" name="description" value=""/>
+                    <input type="submit" class="btn btn-default"/>
+                    <input type="button" value="Cancelar" class="btn btn-default"
+                           onclick="removeNewMarker();"/>
                 </form>
             </div>
         </div>
@@ -186,10 +200,6 @@
                 </form>
 
             </div>
-            <!--<div class="modal-footer">-->
-            <!--<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>-->
-            <!--<button type="submit" class="btn btn-default">Gravar</button>-->
-            <!--</div>-->
         </div>
     </div>
 </div>
