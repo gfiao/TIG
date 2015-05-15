@@ -17,27 +17,40 @@ var newMarker = null;
 
 var currentMarker = null;
 
-var formInsert = '<input type="text" name="lat" value="" style="display: none"/>' +
-    '<input type="text" name="lng" value="" style="display: none"/>' +
-    'Nome: <input type="text" class="form-control" name="name" value=""/>' +
-        //'Tipo: <input type="text" class="form-control" name="type" value=""/>' +
-    'Tipo: <select id="select-type" name="type" class="form-control"> </select>' +
-    '<input type="text" name="city" value="" />' +
-    'Abertura: <input type="time" class="form-control" name="opening" value=""/>' +
-    'Fecho: <input type="time" class="form-control" name="closing" value=""/>' +
-    'Preço: <input type="number" class="form-control" name="price" value="" min="0"/>' +
-    'Descrição: <input type="text" class="form-control" name="description" value=""/>' +
-    '<input type="submit" class="btn btn-default"/>' +
-    '<input type="button" value="Cancelar" class="btn btn-default" onclick="removeNewMarker();checkNewMarker()"/></form>';
+function reverseGeocoding(coords, callback) {
+    //TODO: corrigir localidade
+    geocoder.geocode({'latLng': coords}, function (results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+            if (results[1]) {
+                console.log(results);
+                callback(results[1].formatted_address.split(",")[0]);
+            } else {
+                alert('No results found');
+            }
+        } else {
+            alert('Geocoder failed due to: ' + status);
+        }
+    });
+}
 
+function geocoding(adress, callback) {
+    geocoder.geocode({'address': String(adress)}, function (results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+            callback(globalmap.setCenter(results[0].geometry.location));
+        } else {
+            alert('Geocode was not successful for the following reason: ' + status);
+        }
+    });
+}
 
 function buildInsertForm() {
-    for (var i = 0; i < types.length; i++) {
-        $('#select-type').append($('<option>', {
-            text: String(types[i]),
-            value: types[i]
-        }));
-    }
+    if ($('#select-type option').length == 0)
+        for (var i = 0; i < types.length; i++) {
+            $('#select-type').append($('<option>', {
+                text: String(types[i]),
+                value: types[i]
+            }));
+        }
 }
 
 function buildUpdateForm() {
@@ -84,14 +97,17 @@ function buildCitySelect() {
 function removeNewMarker() {
     newMarker.setMap(null);
     newMarker = null;
+    checkNewMarker();
 }
 
 function checkNewMarker() {
     if (newMarker == null) {
-        $("#insert").html("<p>Escolha um local no mapa para inserir.</p>");
+        $("#insert").css("display", "none");
+        $("#noMarkerMsg").css("display", "inline");
     }
     else {
-        $("#insert").html(formInsert);
+        $("#noMarkerMsg").css("display", "none");
+        $("#insert").css("display", "inline");
         buildInsertForm();
     }
 }
@@ -110,16 +126,6 @@ function filterByPrice(price) {
             else
                 markers[i].setVisible(false);
     }
-}
-
-function panToCity(city) {
-    geocoder.geocode({'address': String(city)}, function (results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-            globalmap.setCenter(results[0].geometry.location);
-        } else {
-            alert('Geocode was not successful for the following reason: ' + status);
-        }
-    });
 }
 
 function addMarkersToHTML() {
@@ -176,7 +182,6 @@ function deleteMarker(marker, map, infoWindow, form) {
         namePost.value = marker.name;
 
         bindInfoWindow(marker, map, infoWindow, form);
-        //form.submit();
     });
 }
 
@@ -278,6 +283,16 @@ function parseXML(xml) {
     }
 }
 
+function backup() {
+    $.ajax({
+        url: 'xmlbackup.php',
+        type: 'post',
+        success: function () {
+            alert("Backup feito!");
+        }
+    });
+}
+
 
 function initialize() {
     var mapOptions = {
@@ -285,6 +300,7 @@ function initialize() {
         zoomControl: false,
         panControl: false,
         zoom: 14,
+        //Lisboa
         center: new google.maps.LatLng(38.722531, -9.140249)
     };
 
@@ -380,8 +396,6 @@ function initialize() {
     });
 
     google.maps.event.addListener(map, 'click', function (event) {
-        //buildInsertForm();
-        //$("#insert").html(formInsert);
         if (newMarker == null) {
             newMarker = new google.maps.Marker({
                 position: event.latLng,
@@ -394,6 +408,7 @@ function initialize() {
             newMarker.position = event.latLng;
             newMarker.setMap(map);
         }
+        checkNewMarker();
 
         var form = document.getElementById("insert");
 
@@ -403,20 +418,9 @@ function initialize() {
         lngf.value = event.latLng.lng();
         var formCity = form.elements[4];
 
-        //TODO: corrigir localidade
-        geocoder.geocode({'latLng': newMarker.position}, function (results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-                if (results[1]) {
-                    console.log(results);
-                    formCity.value = results[1].formatted_address.split(",")[0];
-                } else {
-                    alert('No results found');
-                }
-            } else {
-                alert('Geocoder failed due to: ' + status);
-            }
-        });
-
+        reverseGeocoding(newMarker.position, function (result) {
+            formCity.value = result;
+        })
 
         bindInfoWindow(newMarker, map, infoWindow, form);
     });
@@ -437,10 +441,6 @@ function initialize() {
             }
         }
     });
-
-    //$('#loadXML-button').click(function () {
-    //    $('#xml_file').click();
-    //});
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);

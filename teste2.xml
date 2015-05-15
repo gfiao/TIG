@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<markers>
+    <marker name="Teste XML 1" lat="1" lng="1" type="Hostel" price="10"
+            opening="10:00" closing="18:00"
+            description="Teste XML 1" city="Lisboa"/>
+    <marker name="Teste XML 2" lat="38.712128" lng="-9.139151" type="Hostel" price="10"
+            opening="07:00" closing="22:00"
+            description="Teste XML 2" city="Lisboa"/>
+</markers>
