@@ -13,6 +13,8 @@ var types = new Array();
 
 var cities = new Array();
 
+var optimalPathPoints = new Array();
+
 var newMarker = null;
 
 var currentMarker = null;
@@ -128,12 +130,34 @@ function filterByPrice(price) {
     }
 }
 
-function addMarkersToHTML() {
-    $.each(markers, function (i, marker) {
+function existsIn( array,  obj) {
+    for (var i = 0; i < array.length; i++) {
+        if (array[i] == obj)
+        return true;
+    }
+    return false;
+}
+
+function addToOptimalPath() {
+
+    $("#optimalButton" + currentMarker.id).prop("disabled", false);
+
+    console.log("clickei neste socio! " + currentMarker.id);
+
+    if (!existsIn(optimalPathPoints, currentMarker)) {
+        optimalPathPoints.push(currentMarker);
+
         $('#optimal-path').append($('<option>', {
-            text: marker.name
+            text: currentMarker.name
         }));
-    });
+    }
+
+    console.log(optimalPathPoints);
+
+
+
+    $("#optimalButton" + currentMarker.id).prop("disabled", true);
+
 }
 
 function fullextent() {
@@ -175,7 +199,7 @@ function bindInfoWindow(marker, map, infoWindow, html) {
 }
 
 function deleteMarker(marker, map, infoWindow, form) {
-    google.maps.event.addListener(marker, 'dblclick', function (event) {
+    google.maps.event.addListener(marker, 'dblclick', function () {
         marker.setIcon('http://labs.google.com/ridefinder/images/mm_20_black.png');
 
         var namePost = form.elements[0];
@@ -340,6 +364,12 @@ function initialize() {
                 'Modificar' +
                 '</button>';
 
+            html += '<br\>' +
+                '<button type="button" id="optimalButton'+ id +'" ' +
+                'class="btn btn-default" onclick="addToOptimalPath()" deleted="deleted">' +
+                'Adicionar à lista do caminho óptimo' +
+                '</button>';
+
             var image = 'http://labs.google.com/ridefinder/images/mm_20_red.png';
 
             if (type == 'Hotel') {
@@ -375,7 +405,6 @@ function initialize() {
             bindInfoWindow(marker, map, infoWindow, html);
             deleteMarker(marker, map, infoWindow, form);
         }
-        addMarkersToHTML();
         buildCitySelect();
     });
 
