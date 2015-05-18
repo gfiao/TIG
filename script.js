@@ -450,8 +450,6 @@ function initialize() {
         reverseGeocoding(newMarker.position, function (result) {
             formCity.value = result;
         })
-
-        bindInfoWindow(newMarker, map, infoWindow, form);
     });
 
     //filters for the types of interest points
