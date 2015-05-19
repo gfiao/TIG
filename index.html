@@ -35,15 +35,6 @@
         </label>
     </div>
 
-    <!--<div id="loadXML">-->
-    <!--<input type="file" name="xml-file" class="btn btn-default" id="xml_file">-->
-    <!--<input type="button" id="loadXML-button" class="btn btn-default" onclick="loadXML()" value="Carregar">-->
-    <!--</div>-->
-
-    <!--<div id="backup">-->
-    <!--<button type="button" class="btn btn-default" onclick="backup()">Backup</button>-->
-    <!--</div>-->
-
     <div id="fullextent">
         <button type="button" onclick="fullextent()" class="btn btn-default">Full Extent</button>
     </div>
@@ -80,6 +71,7 @@
         </div>
         <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
             <div class="panel-body">
+                Pontos selecionados:
                 <select id="optimal-path" multiple class="form-control">
                     <!-- HTML is inserted by jquery-->
                 </select>
@@ -163,8 +155,8 @@
                     Fecho: <input type="time" class="form-control" name="closing" value=""/>
                     Preço: <input type="number" class="form-control" name="price" value="" min="0"/>
                     Descrição: <input type="text" class="form-control" name="description" value=""/>
-                    <input type="submit" class="btn btn-default"/>
-                    <input type="button" value="Cancelar" class="btn btn-default"
+                    <input type="submit" class="btn btn-default buttonTop"/>
+                    <input type="button" value="Cancelar" class="btn btn-default buttonTop"
                            onclick="removeNewMarker();"/>
                 </form>
             </div>
@@ -190,9 +182,10 @@
                                value="Carregar">
                     </div>
 
-
+                    Backup da base de dados (cria um ficheiro XML na root do projecto)
                     <div id="backup" class="form-group">
-                        <button type="button" class="btn btn-default" onclick="backup()">Fazer backup da base de dados
+                        <button type="button" class="btn btn-default buttonTop" onclick="backup()">Fazer backup da base
+                            de dados
                         </button>
                     </div>
                 </div>

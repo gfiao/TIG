@@ -299,7 +299,7 @@ function parseXML(xml) {
             content: "Diversas cenas!"
         });
 
-        var image = 'http://labs.google.com/ridefinder/images/mm_20_red.png';
+        var image = 'http://labs.google.com/ridefinder/images/mm_20_purple.png';
 
         if (type == 'Hotel') {
             image = 'http://labs.google.com/ridefinder/images/mm_20_red.png';
@@ -416,7 +416,7 @@ function initialize() {
                 'Adicionar à lista do caminho óptimo' +
                 '</button>';
 
-            var image = 'http://labs.google.com/ridefinder/images/mm_20_red.png';
+            var image = 'http://labs.google.com/ridefinder/images/mm_20_purple.png';
 
             if (type == 'Hotel') {
                 image = 'http://labs.google.com/ridefinder/images/mm_20_red.png';
