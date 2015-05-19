@@ -35,14 +35,14 @@
         </label>
     </div>
 
-    <div id="loadXML">
-        <input type="file" name="xml-file" class="btn btn-default" id="xml_file">
-        <input type="button" id="loadXML-button" class="btn btn-default" onclick="loadXML()" value="Carregar">
-    </div>
+    <!--<div id="loadXML">-->
+    <!--<input type="file" name="xml-file" class="btn btn-default" id="xml_file">-->
+    <!--<input type="button" id="loadXML-button" class="btn btn-default" onclick="loadXML()" value="Carregar">-->
+    <!--</div>-->
 
-    <div id="backup">
-        <button type="button" class="btn btn-default" onclick="backup()">Backup</button>
-    </div>
+    <!--<div id="backup">-->
+    <!--<button type="button" class="btn btn-default" onclick="backup()">Backup</button>-->
+    <!--</div>-->
 
     <div id="fullextent">
         <button type="button" onclick="fullextent()" class="btn btn-default">Full Extent</button>
@@ -83,6 +83,15 @@
                 <select id="optimal-path" multiple class="form-control">
                     <!-- HTML is inserted by jquery-->
                 </select>
+
+                <button type="button" class="btn btn-default buttonTop"
+                        onclick="calcOptimalPath()">Submeter
+                </button>
+
+                <button type="button" class="btn btn-default buttonTop"
+                        onclick="removeFromOptimalPath(document.getElementById('optimal-path').options[document.getElementById('optimal-path').selectedIndex].value)">
+                    Remover
+                </button>
             </div>
         </div>
     </div>
@@ -161,6 +170,35 @@
             </div>
         </div>
     </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingFive">
+            <h4 class="panel-title">
+                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFive"
+                   aria-expanded="false" aria-controls="collapseFive">
+                    Funções avançadas
+                </a>
+            </h4>
+        </div>
+        <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+            <div class="panel-body">
+                <div>
+                    Carregar XML
+                    <div id="loadXML" class="form-group">
+                        <input type="file" name="xml-file" class="btn btn-default" id="xml_file">
+                        <input type="button" id="loadXML-button" class="btn btn-default" onclick="loadXML()"
+                               value="Carregar">
+                    </div>
+
+
+                    <div id="backup" class="form-group">
+                        <button type="button" class="btn btn-default" onclick="backup()">Fazer backup da base de dados
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Modal -->
@@ -202,7 +240,7 @@
     </div>
 </div>
 
-<form id="del" action="delete.php" method="post">
+<form id="del" action="delete.php" method="post" style="display: none">
     <input type="hidden" name="name" value=""/>
     <input type="submit" value="Remover" class="btn btn-default"/>
 </form>

@@ -39,23 +39,29 @@ body {
     left: 1%;
 }
 
-#fullextent{
+#fullextent {
     position: absolute;
     z-index: 99;
     bottom: 3%;
     right: 1%;
 }
 
-#backup{
-    position: absolute;
-    z-index: 99;
-    bottom: 10%;
-    right: 1%;
+#backup {
+
 }
 
-#loadXML{
-    position: absolute;
-    z-index: 99;
-    bottom: 17%;
-    right: 1%;
+#xml_file{
+    width: 100%;
+}
+
+#loadXML-button{
+    margin-top: 2%;
+}
+
+#loadXML {
+    /*width: inherit;*/
+}
+
+.buttonTop{
+    margin-top: 1%;
 }

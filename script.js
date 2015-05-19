@@ -3,23 +3,85 @@ var google = google || {};
 var globalmap;
 
 //this array stores the xml constructed by xmloutdom.php
-var markersXML = new Array();
+var markersXML = [];
 
 //this array stores the markers as a marker object
-var markers = new Array();
-var geocoder = new google.maps.Geocoder();
+var markers = [];
+//var geocoder = new google.maps.Geocoder();
+//var directionsService = new google.maps.DirectionsService();
+var directionsDisplay;
 
-var types = new Array();
+var types = [];
 
-var cities = new Array();
+var cities = [];
 
-var optimalPathPoints = new Array();
+var optimalPathPoints = [];
 
 var newMarker = null;
 
 var currentMarker = null;
 
+function calcOptimalPath() {
+    var directionsService = new google.maps.DirectionsService();
+
+    var waypoints = optimalPathPoints;
+
+    var start = waypoints[0];
+    var end = waypoints[waypoints.length - 1];
+
+    var readyWaypoints = [];
+    for (var i = 1; i < waypoints.length - 1; i++) {
+        readyWaypoints.push({
+            location: waypoints[i].position,
+            stopover: true
+        });
+    }
+
+    var request = {
+        origin: start.position,
+        destination: end.position,
+        waypoints: readyWaypoints,
+        optimizeWaypoints: true,
+        travelMode: google.maps.TravelMode.WALKING
+    };
+
+    directionsService.route(request, function (response, status) {
+        if (status == google.maps.DirectionsStatus.OK) {
+            directionsDisplay.setDirections(response);
+        }
+    });
+}
+
+function addToOptimalPath() {
+    if (optimalPathPoints.length != 8) {
+        if (!existsIn(optimalPathPoints, currentMarker))
+            $("#optimalButton" + currentMarker.id).prop("disabled", false);
+
+        console.log("clickei neste socio! " + currentMarker.id);
+
+        if (!existsIn(optimalPathPoints, currentMarker)) {
+            optimalPathPoints.push(currentMarker);
+
+            $('#optimal-path').append($('<option>', {
+                value: currentMarker.id,
+                text: currentMarker.name
+            }));
+        }
+
+        console.log(optimalPathPoints);
+
+
+        $("#optimalButton" + currentMarker.id).prop("disabled", true);
+    }
+}
+
+function removeFromOptimalPath(optionToRemove) {
+    removeFromArray(optimalPathPoints, optionToRemove);
+    $("#optimal-path :selected").remove();
+}
+
 function reverseGeocoding(coords, callback) {
+    var geocoder = new google.maps.Geocoder();
     //TODO: corrigir localidade
     geocoder.geocode({'latLng': coords}, function (results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
@@ -36,6 +98,7 @@ function reverseGeocoding(coords, callback) {
 }
 
 function geocoding(adress, callback) {
+    var geocoder = new google.maps.Geocoder();
     geocoder.geocode({'address': String(adress)}, function (results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
             callback(globalmap.setCenter(results[0].geometry.location));
@@ -130,34 +193,18 @@ function filterByPrice(price) {
     }
 }
 
-function existsIn( array,  obj) {
+function existsIn(array, obj) {
     for (var i = 0; i < array.length; i++) {
         if (array[i] == obj)
-        return true;
+            return true;
     }
     return false;
 }
 
-function addToOptimalPath() {
-
-    $("#optimalButton" + currentMarker.id).prop("disabled", false);
-
-    console.log("clickei neste socio! " + currentMarker.id);
-
-    if (!existsIn(optimalPathPoints, currentMarker)) {
-        optimalPathPoints.push(currentMarker);
-
-        $('#optimal-path').append($('<option>', {
-            text: currentMarker.name
-        }));
-    }
-
-    console.log(optimalPathPoints);
-
-
-
-    $("#optimalButton" + currentMarker.id).prop("disabled", true);
-
+function removeFromArray(array, id) {
+    for (var i = 0; i < array.length; i++)
+        if (array[i].id == id)
+            array.splice(i, 1);
 }
 
 function fullextent() {
@@ -200,6 +247,7 @@ function bindInfoWindow(marker, map, infoWindow, html) {
 
 function deleteMarker(marker, map, infoWindow, form) {
     google.maps.event.addListener(marker, 'dblclick', function () {
+        $("#del").css("display", "inline");
         marker.setIcon('http://labs.google.com/ridefinder/images/mm_20_black.png');
 
         var namePost = form.elements[0];
@@ -224,9 +272,7 @@ function parseXML(xml) {
     console.log(xml);
     var markersXML = xml.documentElement.getElementsByTagName("marker");
     for (var i = 0; i < markersXML.length; i++) {
-        console.log(markersXML[i]);
         var city = markersXML[i].getAttribute("city");
-        console.log(city);
         var name = markersXML[i].getAttribute("name");
         var type = markersXML[i].getAttribute("type");
         var opening = markersXML[i].getAttribute("opening");
@@ -365,7 +411,7 @@ function initialize() {
                 '</button>';
 
             html += '<br\>' +
-                '<button type="button" id="optimalButton'+ id +'" ' +
+                '<button type="button" id="optimalButton' + id + '" ' +
                 'class="btn btn-default" onclick="addToOptimalPath()" deleted="deleted">' +
                 'Adicionar à lista do caminho óptimo' +
                 '</button>';
@@ -400,6 +446,8 @@ function initialize() {
                 price: price,
                 description: description
             });
+            directionsDisplay = new google.maps.DirectionsRenderer();
+            directionsDisplay.setMap(map);
             globalmap = map;
             markers.push(marker);
             bindInfoWindow(marker, map, infoWindow, html);
