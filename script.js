@@ -75,9 +75,11 @@ function addToOptimalPath() {
     }
 }
 
-function removeFromOptimalPath(optionToRemove) {
-    removeFromArray(optimalPathPoints, optionToRemove);
+function removeFromOptimalPath(optionsToRemove) {
+    console.log(optionsToRemove);
+    removeFromArray(optimalPathPoints, optionsToRemove);
     $("#optimal-path :selected").remove();
+    console.log(optimalPathPoints);
 }
 
 function reverseGeocoding(coords, callback) {
@@ -201,10 +203,11 @@ function existsIn(array, obj) {
     return false;
 }
 
-function removeFromArray(array, id) {
+function removeFromArray(array, ids) {
     for (var i = 0; i < array.length; i++)
-        if (array[i].id == id)
-            array.splice(i, 1);
+        for (var j = 0; j < ids.length; j++)
+            if (array[i].id == ids[j])
+                array.splice(i, 1);
 }
 
 function fullextent() {

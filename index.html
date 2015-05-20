@@ -81,7 +81,11 @@
                 </button>
 
                 <button type="button" class="btn btn-default buttonTop"
-                        onclick="removeFromOptimalPath(document.getElementById('optimal-path').options[document.getElementById('optimal-path').selectedIndex].value)">
+                        onclick="var optionValues = [];
+                         $('#optimal-path :selected').each(function() {
+    optionValues.push($(this).val());
+});
+removeFromOptimalPath(optionValues)">
                     Remover
                 </button>
             </div>
