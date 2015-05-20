@@ -1,7 +1,7 @@
 var google = google || {};
 
 var globalmap;
-
+var globalPrice = Number.MAX_VALUE;
 //this array stores the xml constructed by xmloutdom.php
 var markersXML = [];
 
@@ -178,6 +178,10 @@ function checkNewMarker() {
 }
 
 function filterByPrice(price) {
+    if (price == 0)
+        globalPrice = Number.MAX_VALUE;
+    else
+        globalPrice = price;
     if (price == "" || price == 0) {
         for (var i = 0; i < markers.length; i++) {
             if ($('#' + markers[i].type).is(':checked'))
@@ -505,7 +509,7 @@ function initialize() {
         var id = this.id;
         if ($('#' + id).is(':checked')) {
             for (var i = 0; i < markers.length; i++) {
-                if (markers[i].type == id)
+                if (markers[i].type == id && markers[i].price <= globalPrice)
                     markers[i].setVisible(true);
             }
         }
