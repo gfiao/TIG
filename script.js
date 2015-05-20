@@ -25,8 +25,8 @@ var currentMarker = null;
 function login() {
     var form = document.getElementById("login-form");
 
-    //var username = form.elements[0];
-    //username.value = currentMarker.name;
+    var username = form.elements[0].value;
+    var password = form.elements[1].value;
 
     $.ajax({
         url: 'authenticate.php',
@@ -36,9 +36,7 @@ function login() {
             "password": password
         },
         success: function (response) {
-            console.log(response);
-        },
-        error: function (response) {
+            //console.log("sucess");
             console.log(response);
         }
     });

@@ -16,7 +16,8 @@ if (!mysql_query($sql,$con))
 die('Error: ' . mysql_error());
 }
 
-echo mysql_query($sql,$con);
+echo mysql_fetch_array(mysql_query($sql))[0] . "/" . mysql_fetch_array(mysql_query($sql))[1];
+
 
 mysql_close($con);
 
