@@ -18,7 +18,7 @@ body {
     height: 100%;
 }
 
-#legend {
+#filters {
     position: absolute;
     z-index: 99;
     left: 35%;
@@ -57,4 +57,25 @@ body {
     margin-top: 1%;
 }
 
-.optimal-option{}
+#login-button {
+    position: absolute;
+    z-index: 99;
+    bottom: 10%;
+    right: 1%;
+}
+
+#legend {
+    background: white;
+    position: absolute;
+    z-index: 99;
+    border: 1px solid grey;
+    border-radius: 4px 4px 4px 4px;
+    right:1%;
+    top: 5%;
+    padding: 1%;
+}
+
+.legendItem{
+    /*padding: 15%;*/
+    /*border: 1px black solid;*/
+}

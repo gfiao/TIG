@@ -1,5 +1,7 @@
 var google = google || {};
 
+var isLoggedIn;
+
 var globalmap;
 var globalPrice = Number.MAX_VALUE;
 //this array stores the xml constructed by xmloutdom.php
@@ -7,8 +9,7 @@ var markersXML = [];
 
 //this array stores the markers as a marker object
 var markers = [];
-//var geocoder = new google.maps.Geocoder();
-//var directionsService = new google.maps.DirectionsService();
+
 var directionsDisplay;
 
 var types = [];
@@ -20,6 +21,28 @@ var optimalPathPoints = [];
 var newMarker = null;
 
 var currentMarker = null;
+
+function login() {
+    var form = document.getElementById("login-form");
+
+    //var username = form.elements[0];
+    //username.value = currentMarker.name;
+
+    $.ajax({
+        url: 'authenticate.php',
+        type: 'post',
+        data: {
+            "username": username,
+            "password": password
+        },
+        success: function (response) {
+            console.log(response);
+        },
+        error: function (response) {
+            console.log(response);
+        }
+    });
+}
 
 function calcOptimalPath() {
     var directionsService = new google.maps.DirectionsService();
@@ -128,6 +151,7 @@ function buildUpdateForm() {
                 value: types[i]
             }));
         }
+    console.log(currentMarker);
 
     var form = document.getElementById("update");
 
@@ -151,12 +175,11 @@ function buildUpdateForm() {
 }
 
 function buildCitySelect() {
-    for (var i = 0; i < cities.length; i++) {
+    for (var i = 0; i < cities.length; i++)
         $('#city-select').append($('<option>', {
             text: String(cities[i]),
             value: cities[i]
         }));
-    }
 }
 
 //checks if newMarker is null or not
