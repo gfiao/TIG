@@ -159,7 +159,7 @@
             </div>
         </div>
     </div>
-    <div class="panel panel-default">
+    <div id="newMarker" class="panel panel-default">
         <div class="panel-heading" role="tab" id="headingFour">
             <h4 class="panel-title" onclick="checkNewMarker()">
                 <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour"
@@ -190,7 +190,7 @@
         </div>
     </div>
 
-    <div class="panel panel-default">
+    <div id="advancedFunctions" class="panel panel-default">
         <div class="panel-heading" role="tab" id="headingFive">
             <h4 class="panel-title">
                 <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFive"
@@ -221,15 +221,20 @@
     </div>
 </div>
 
-<div id="login-button">
+<div id="login">
     <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#login">
+    <button id="login-button" type="button" class="btn btn-primary btn-lg" data-toggle="modal"
+            data-target="#loginModal">
         Log in
+    </button>
+
+    <button id="logout-button" type="button" class="btn btn-primary btn-lg" onclick="logout()" style="display: none;">
+        Log out
     </button>
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

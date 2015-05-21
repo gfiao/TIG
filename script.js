@@ -1,6 +1,6 @@
 var google = google || {};
 
-var isLoggedIn;
+var isLoggedIn = false;
 
 var globalmap;
 var globalPrice = Number.MAX_VALUE;
@@ -36,10 +36,42 @@ function login() {
             "password": password
         },
         success: function (response) {
-            //console.log("sucess");
-            console.log(response);
+            //console.log(response);
+            if (response == "")
+                alert("Username ou password errado!")
+            else {
+                alert("Seja bem-vindo!");
+                createAdminInterface();
+            }
         }
     });
+}
+
+function createAdminInterface() {
+    isLoggedIn = true;
+
+    //close modal
+    $('#loginModal').modal('hide');
+
+    //change buttons
+    $("#login-button").hide();
+    $("#logout-button").show();
+
+    //change display of the menus
+    $("#newMarker, #advancedFunctions").css("display", "none");
+    $("#newMarker, #advancedFunctions").hide();
+}
+
+
+function logout() {
+    isLoggedIn = false;
+
+    //change buttons
+    $("#login-button").show();
+    $("#logout-button").hide();
+
+    //change display of the menus
+    $("#newMarker, #advancedFunctions").show();
 }
 
 function calcOptimalPath() {
@@ -501,18 +533,19 @@ function initialize() {
     });
 
     google.maps.event.addListener(map, 'click', function (event) {
-        if (newMarker == null) {
-            newMarker = new google.maps.Marker({
-                position: event.latLng,
-                map: map,
-                title: "New Marker"
-            });
-        }
-        else {
-            newMarker.setMap(null);
-            newMarker.position = event.latLng;
-            newMarker.setMap(map);
-        }
+        if (!isLoggedIn)
+            if (newMarker == null) {
+                newMarker = new google.maps.Marker({
+                    position: event.latLng,
+                    map: map,
+                    title: "New Marker"
+                });
+            }
+            else {
+                newMarker.setMap(null);
+                newMarker.position = event.latLng;
+                newMarker.setMap(map);
+            }
         checkNewMarker();
 
         var form = document.getElementById("insert");
