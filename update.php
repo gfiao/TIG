@@ -19,7 +19,7 @@ die('Error: ' . mysql_error());
 
 mysql_close($con);
 
-header('location: http://localhost/TIG_Projecto/index.html');
+header('location: http://localhost/TIG/index.html');
 
 exit;
 
