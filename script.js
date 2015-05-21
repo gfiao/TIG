@@ -38,7 +38,7 @@ function login() {
         success: function (response) {
             //console.log(response);
             if (response == "")
-                alert("Username ou password errado!")
+                alert("Username ou password errado!");
             else {
                 alert("Seja bem-vindo!");
                 createAdminInterface();
