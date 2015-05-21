@@ -48,6 +48,7 @@ function login() {
 }
 
 function createAdminInterface() {
+    removeNewMarker();
     isLoggedIn = true;
 
     //close modal
@@ -141,8 +142,12 @@ function reverseGeocoding(coords, callback) {
     geocoder.geocode({'latLng': coords}, function (results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
             if (results[1]) {
-                console.log(results);
-                callback(results[1].formatted_address.split(",")[0]);
+                //console.log(results);
+                for (var i = 0; i < results.length; i++) {
+                    if (results[i].types[0] === "locality") {
+                        callback(results[i].address_components[0].short_name);
+                    }
+                }
             } else {
                 alert('No results found');
             }
