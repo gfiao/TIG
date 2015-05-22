@@ -22,6 +22,138 @@ var newMarker = null;
 
 var currentMarker = null;
 
+function buildCityPriceForm() {
+    if ($('#selectCity option').length == 0)
+        for (var i = 0; i < cities.length; i++) {
+            $('#selectCity').append($('<option>', {
+                text: String(cities[i]),
+                value: cities[i]
+            }));
+        }
+}
+
+function citySelectChange() {
+    //TODO este id é temporario, necessario mudar quando se criar a janela em HTML
+    $('#selectCity').change(function () {
+        var parent = $(this).val();
+        var types = [];
+        //Popular as dropdowns dos tipos
+        for (var i = 0; i < markers.length; i++)
+            if (markers[i].city == parent && !existsIn(types, markers[i].type))
+                types.push(markers[i].type);
+
+        //TODO ids podem ser estaticos
+        list(types, 'selectBegin');
+        list(types, 'selectEnd');
+    });
+}
+
+function selectBeginTypeChange() {
+    $('#selectBeginTypes').change(function () {
+        var city = $('#selectCity').val();
+        var type = $(this).val();
+        var names = [];
+        var ids = [];
+        //Popular as dropdowns dos marcadores
+        for (var i = 0; i < markers.length; i++) {
+            if (markers[i].type == type && markers[i].city == city) {
+                names.push(markers[i].name);
+                ids.push(markers[i].id);
+            }
+        }
+        $("#selectBeginMarkers").html("");
+        $(names).each(function (i) { //populate child options
+            $("#selectBeginMarkers").append('<option value="' + ids[i] + '">' + names[i] + '</option>');
+        });
+    });
+}
+
+function selectEndTypeChange() {
+    $('#selectEndTypes').change(function () {
+        var city = $('#selectCity').val();
+        var type = $(this).val();
+        var names = [];
+        var ids = [];
+        //Popular as dropdowns dos marcadores
+        for (var i = 0; i < markers.length; i++) {
+            if (markers[i].type == type && markers[i].city == city) {
+                names.push(markers[i].name);
+                ids.push(markers[i].id);
+            }
+        }
+        $("#selectEndMarkers").html("");
+        $(names).each(function (i) { //populate child options
+            $("#selectEndMarkers").append('<option value="' + ids[i] + '">' + names[i] + '</option>');
+        });
+    });
+}
+
+function list(array_list, selectId) {
+    //TODO esta lista tem uma forma peculiar, mudar aqui ou criar a lista em cima!!!
+    $("#" + selectId + "Markers").html(""); //reset grandchild options id = "selectBeginMarkers"
+    $("#" + selectId + "Types").html(""); //reset child options id = "selectBeginTypes"
+
+    $(array_list).each(function (i) { //populate child options
+        $("#" + selectId + "Types").append('<option value="' + array_list[i] + '">' + array_list[i] + '</option>');
+    });
+}
+
+function buildPlafonPath(initialID, endID, plafon) {
+    //TODO falta receber os dados como deve de ser
+    if (plafon <= 0)
+        plafon = Number.MAX_VALUE;
+    var initialMarker, endMarker;
+    for (var i = 0; i < markers.length; i++) {
+        if (initialID == markers[i].id)
+            initialMarker = markers[i];
+        if (endID == markers[i].id)
+            endMarker = markers[i];
+    }
+
+
+    var totalPrice = initialMarker.price + endMarker.price;
+    var pricePathMarkers = [];
+
+    for (var i = 0; i < markers.length; i++) {
+
+        console.log("plafon: " + plafon);
+        console.log("totalPrice: " + totalPrice);
+        console.log("preço do marcador: " + markers[i].price);
+        console.log(totalPrice + markers[i].price > plafon);
+
+        if (totalPrice + markers[i].price > plafon)
+            continue;
+        pricePathMarkers.push(markers[i]);
+        totalPrice += markers[i].price;
+    }
+
+    calcPlafonPath(pricePathMarkers, initialMarker, endMarker);
+}
+
+function calcPlafonPath(pricePathMarkers, initialMarker, endMarker) {
+    var directionsService = new google.maps.DirectionsService();
+
+    var waypoints = pricePathMarkers;
+    console.log("waypoints: " + waypoints);
+
+    var start = initialMarker;
+    var end = endMarker;
+
+    var request = {
+        origin: start.position,
+        destination: end.position,
+        waypoints: waypoints,
+        optimizeWaypoints: true,
+        travelMode: google.maps.TravelMode.WALKING
+    };
+
+    directionsService.route(request, function (response, status) {
+        if (status == google.maps.DirectionsStatus.OK) {
+            directionsDisplay.setDirections(response);
+        }
+    });
+}
+
 function login() {
     var form = document.getElementById("login-form");
 
@@ -40,7 +172,7 @@ function login() {
             if (response == "")
                 alert("Username ou password errado!");
             else {
-                alert("Seja bem-vindo!");
+                //  alert("Seja bem-vindo!");
                 createAdminInterface();
             }
         }
@@ -48,19 +180,20 @@ function login() {
 }
 
 function createAdminInterface() {
-    removeNewMarker();
+    if (newMarker != null)
+        removeNewMarker();
+
     isLoggedIn = true;
 
     //close modal
-    $('#loginModal').modal('hide');
+    $("#loginModal").modal("hide");
 
     //change buttons
     $("#login-button").hide();
     $("#logout-button").show();
 
     //change display of the menus
-    $("#newMarker, #advancedFunctions").css("display", "none");
-    $("#newMarker, #advancedFunctions").hide();
+    $("#newMarker, #advancedFunctions").show();
 }
 
 
@@ -72,7 +205,7 @@ function logout() {
     $("#logout-button").hide();
 
     //change display of the menus
-    $("#newMarker, #advancedFunctions").show();
+    $("#newMarker, #advancedFunctions").hide();
 }
 
 function calcOptimalPath() {
@@ -238,11 +371,11 @@ function checkNewMarker() {
 }
 
 function filterByPrice(price) {
-    if (price == 0)
+    if (price <= 0)
         globalPrice = Number.MAX_VALUE;
     else
         globalPrice = price;
-    if (price == "" || price == 0) {
+    if (price == "" || price <= 0) {
         for (var i = 0; i < markers.length; i++) {
             if ($('#' + markers[i].type).is(':checked'))
                 markers[i].setVisible(true);
@@ -340,6 +473,7 @@ function parseXML(xml) {
         var city = markersXML[i].getAttribute("city");
         var name = markersXML[i].getAttribute("name");
         var type = markersXML[i].getAttribute("type");
+        var city = markersXML[i].getAttribute("city");
         var opening = markersXML[i].getAttribute("opening");
         var closing = markersXML[i].getAttribute("closing");
         var point = new google.maps.LatLng(
@@ -388,6 +522,7 @@ function parseXML(xml) {
             icon: image,
             name: name,
             type: type,
+            city: city,
             opening: opening,
             closing: closing,
             price: price,
@@ -455,6 +590,7 @@ function initialize() {
             var id = markersXML[i].getAttribute("id");
             var name = markersXML[i].getAttribute("name");
             var type = markersXML[i].getAttribute("type");
+            var city = markersXML[i].getAttribute("city");
             var opening = markersXML[i].getAttribute("opening");
             var closing = markersXML[i].getAttribute("closing");
             var point = new google.maps.LatLng(
@@ -506,6 +642,7 @@ function initialize() {
                 id: id,
                 name: name,
                 type: type,
+                city: city,
                 opening: opening,
                 closing: closing,
                 price: price,
@@ -519,6 +656,8 @@ function initialize() {
             deleteMarker(marker, map, infoWindow, form);
         }
         buildCitySelect();
+        //change display of the menus
+        $("#newMarker, #advancedFunctions").hide();
     });
 
     downloadUrl("xmltypes.php", function (data) {
@@ -538,7 +677,7 @@ function initialize() {
     });
 
     google.maps.event.addListener(map, 'click', function (event) {
-        if (!isLoggedIn)
+        if (isLoggedIn)
             if (newMarker == null) {
                 newMarker = new google.maps.Marker({
                     position: event.latLng,
@@ -582,6 +721,10 @@ function initialize() {
             }
         }
     });
+
+    citySelectChange();
+    selectBeginTypeChange();
+    selectEndTypeChange();
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);

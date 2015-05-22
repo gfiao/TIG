@@ -125,7 +125,13 @@
         </div>
         <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
             <div class="panel-body">
-                Teste 2.
+                <!-- Button trigger modal -->
+                <button type="button" onclick="buildCityPriceForm() " class="btn btn-primary btn-lg" data-toggle="modal"
+                        data-target="#modalPricePath">
+                    Launch demo modal
+                </button>
+
+
             </div>
         </div>
     </div>
@@ -177,7 +183,7 @@
                     <input type="text" name="lng" value="" style="display: none"/>
                     Nome: <input type="text" class="form-control" name="name" value=""/>
                     Tipo: <select id="select-type" name="type" class="form-control"> </select>
-                    <input type="text" name="city" value=""/>
+                    <input type="text" name="city" value="" style="display:none"/>
                     Abertura: <input type="time" class="form-control" name="opening" value=""/>
                     Fecho: <input type="time" class="form-control" name="closing" value=""/>
                     Preço: <input type="number" class="form-control" name="price" value="" min="0"/>
@@ -323,6 +329,72 @@
     <input type="hidden" name="name" value=""/>
     <input type="submit" value="Remover" class="btn btn-default"/>
 </form>
+
+
+<!-- Price path Modal -->
+<div class="modal fade" id="modalPricePath" tabindex="-1" role="dialog" aria-labelledby="modalPricePathLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="modalPricePathLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                <form id="formPricePath">
+
+                    <div class="form-group">
+                        <label for="selectCity">Cidade:</label>
+                        <select id="selectCity" name="type" class="form-control"> </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="selectBeginTypes">Tipo Inicio</label>
+                        <select id="selectBeginTypes" name="type" class="form-control"> </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="selectBeginMarkers">Local Inicio</label>
+                        <select id="selectBeginMarkers" name="type" class="form-control"> </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="selectEndTypes">Tipo Final</label>
+                        <select id="selectEndTypes" name="type" class="form-control"> </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="selectEndMarkers">Local Final</label>
+                        <select id="selectEndMarkers" name="type" class="form-control"> </select>
+                    </div>
+
+                    <label class="sr-only" for="priceButton">Amount (in euros)</label>
+
+                    <div class="input-group">
+                        <div class="input-group-addon">$</div>
+                        <input type="number" class="form-control" id="pricePathValue" min="0"
+                               placeholder="Plafon que está disposto a gastar.">
+
+                    </div>
+
+
+                    <input type="button" class="btn btn-default"
+                           onclick=" var initialMarker = document.getElementById('selectBeginMarkers').value;
+                           var endMarker = document.getElementById('selectEndMarkers').value;
+                           var plafon = document.getElementById('pricePathValue').value;
+                           buildPlafonPath(initialMarker, endMarker, plafon)"/>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 </body>
 </html>

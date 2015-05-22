@@ -43,6 +43,7 @@ while ($row = @mysql_fetch_assoc($result)){
   $newnode->setAttribute("lat", $row['lat']);  
   $newnode->setAttribute("lng", $row['lng']);  
   $newnode->setAttribute("type", $row['type']);
+  $newnode->setAttribute("city", $row['city']);
   $newnode->setAttribute("price", $row['price']);
   $newnode->setAttribute("opening", $row['opening']);
   $newnode->setAttribute("closing", $row['closing']);
