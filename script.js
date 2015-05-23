@@ -109,22 +109,31 @@ function buildPlafonPath(initialID, endID, plafon) {
         if (endID == markers[i].id)
             endMarker = markers[i];
     }
-
-
-    var totalPrice = initialMarker.price + endMarker.price;
+    var totalPrice = parseInt(initialMarker.price) + parseInt(endMarker.price);
     var pricePathMarkers = [];
+
+    console.log("preço total inicial: " + totalPrice);
 
     for (var i = 0; i < markers.length; i++) {
 
+        /*****************Prints de debug**************************/
         console.log("plafon: " + plafon);
         console.log("totalPrice: " + totalPrice);
         console.log("preço do marcador: " + markers[i].price);
-        console.log(totalPrice + markers[i].price > plafon);
+        console.log("totalPrice + markers[i].price > plafon: " + (totalPrice + parseInt(markers[i].price)) > plafon);
+        /*****************Prints de debug**************************/
 
-        if (totalPrice + markers[i].price > plafon)
+        var markerPrice = parseInt(markers[i].price);
+        if ((totalPrice + markerPrice) > plafon)
             continue;
-        pricePathMarkers.push(markers[i]);
-        totalPrice += markers[i].price;
+        pricePathMarkers.push({
+            location: markers[i].position,
+            stopover: true
+        });
+        totalPrice += markerPrice;
+
+        if (pricePathMarkers.length == 8)
+            break;
     }
 
     calcPlafonPath(pricePathMarkers, initialMarker, endMarker);
