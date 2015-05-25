@@ -22,6 +22,36 @@ var newMarker = null;
 
 var currentMarker = null;
 
+function populateTypesDropdown(parent) {
+    var types = [];
+    //Popular as dropdowns dos tipos
+    for (var i = 0; i < markers.length; i++)
+        if (markers[i].city == parent && !existsIn(types, markers[i].type))
+            types.push(markers[i].type);
+
+    list(types, 'selectBegin');
+    list(types, 'selectEnd');
+}
+
+function initPriceModal() {
+    //Popular as dropdowns com valores default
+    $('#selectCity').val("Lisboa");
+    var city = "Lisboa";
+
+    //preencher tipoInicio
+    //preencher tipoFinal
+    populateTypesDropdown(city);
+
+    //preencher pontoInicio
+    var beginType = $('#selectBeginTypes').val();
+    populateBeginMarkersDropdown(beginType, city);
+    //preencher pontoFinal
+    var endType = $('#selectEndTypes').val();
+    populateEndMarkersDropdown(endType, city);
+
+}
+
+//Este método é chamado quando carregamos no botao do modal
 function buildCityPriceForm() {
     if ($('#selectCity option').length == 0)
         for (var i = 0; i < cities.length; i++) {
@@ -30,78 +60,85 @@ function buildCityPriceForm() {
                 value: cities[i]
             }));
         }
+
+    initPriceModal();
 }
 
 function citySelectChange() {
-    //TODO este id é temporario, necessario mudar quando se criar a janela em HTML
     $('#selectCity').change(function () {
         var parent = $(this).val();
-        var types = [];
-        //Popular as dropdowns dos tipos
-        for (var i = 0; i < markers.length; i++)
-            if (markers[i].city == parent && !existsIn(types, markers[i].type))
-                types.push(markers[i].type);
-
-        //TODO ids podem ser estaticos
-        list(types, 'selectBegin');
-        list(types, 'selectEnd');
+        populateTypesDropdown(parent);
     });
+}
+
+function populateBeginMarkersDropdown(type, city) {
+    var names = [];
+    var ids = [];
+    //Popular as dropdowns dos marcadores
+    for (var i = 0; i < markers.length; i++) {
+        if (markers[i].type == type && markers[i].city == city) {
+            names.push(markers[i].name);
+            ids.push(markers[i].id);
+        }
+    }
+    $("#selectBeginMarkers").html("");
+    $(names).each(function (i) { //populate child options
+        $("#selectBeginMarkers").append('<option value="' + ids[i] + '">' + names[i] + '</option>');
+    });
+    $('#selectBeginMarkers').val(ids[0]);
 }
 
 function selectBeginTypeChange() {
     $('#selectBeginTypes').change(function () {
         var city = $('#selectCity').val();
         var type = $(this).val();
-        var names = [];
-        var ids = [];
-        //Popular as dropdowns dos marcadores
-        for (var i = 0; i < markers.length; i++) {
-            if (markers[i].type == type && markers[i].city == city) {
-                names.push(markers[i].name);
-                ids.push(markers[i].id);
-            }
-        }
-        $("#selectBeginMarkers").html("");
-        $(names).each(function (i) { //populate child options
-            $("#selectBeginMarkers").append('<option value="' + ids[i] + '">' + names[i] + '</option>');
-        });
+        populateBeginMarkersDropdown(type, city);
     });
 }
 
+function populateEndMarkersDropdown(type, city) {
+    var names = [];
+    var ids = [];
+    //Popular as dropdowns dos marcadores
+    for (var i = 0; i < markers.length; i++) {
+        if (markers[i].type == type && markers[i].city == city) {
+            names.push(markers[i].name);
+            ids.push(markers[i].id);
+        }
+    }
+    $("#selectEndMarkers").html("");
+    $(names).each(function (i) { //populate child options
+        $("#selectEndMarkers").append('<option value="' + ids[i] + '">' + names[i] + '</option>');
+    });
+    $('#selectEndMarkers').val(ids[0]);
+}
 function selectEndTypeChange() {
     $('#selectEndTypes').change(function () {
         var city = $('#selectCity').val();
         var type = $(this).val();
-        var names = [];
-        var ids = [];
-        //Popular as dropdowns dos marcadores
-        for (var i = 0; i < markers.length; i++) {
-            if (markers[i].type == type && markers[i].city == city) {
-                names.push(markers[i].name);
-                ids.push(markers[i].id);
-            }
-        }
-        $("#selectEndMarkers").html("");
-        $(names).each(function (i) { //populate child options
-            $("#selectEndMarkers").append('<option value="' + ids[i] + '">' + names[i] + '</option>');
-        });
+        populateEndMarkersDropdown(type, city);
     });
 }
 
 function list(array_list, selectId) {
-    //TODO esta lista tem uma forma peculiar, mudar aqui ou criar a lista em cima!!!
     $("#" + selectId + "Markers").html(""); //reset grandchild options id = "selectBeginMarkers"
     $("#" + selectId + "Types").html(""); //reset child options id = "selectBeginTypes"
 
     $(array_list).each(function (i) { //populate child options
         $("#" + selectId + "Types").append('<option value="' + array_list[i] + '">' + array_list[i] + '</option>');
     });
+    $("#" + selectId + "Types").val(array_list[0]);
+
+    if (selectId == "selectBegin")
+        populateBeginMarkersDropdown(array_list[0], $('#selectCity').val());
+    else
+        populateEndMarkersDropdown(array_list[0], $('#selectCity').val());
 }
 
-function buildPlafonPath(initialID, endID, plafon) {
+function buildPlafondPath(initialID, endID, plafond) {
     //TODO falta receber os dados como deve de ser
-    if (plafon <= 0)
-        plafon = Number.MAX_VALUE;
+    if (plafond <= 0)
+        plafond = Number.MAX_VALUE;
     var initialMarker, endMarker;
     for (var i = 0; i < markers.length; i++) {
         if (initialID == markers[i].id)
@@ -112,34 +149,34 @@ function buildPlafonPath(initialID, endID, plafon) {
     var totalPrice = parseInt(initialMarker.price) + parseInt(endMarker.price);
     var pricePathMarkers = [];
 
-    console.log("preço total inicial: " + totalPrice);
-
     for (var i = 0; i < markers.length; i++) {
 
         /*****************Prints de debug**************************/
-        console.log("plafon: " + plafon);
+        console.log("plafond: " + plafond);
         console.log("totalPrice: " + totalPrice);
         console.log("preço do marcador: " + markers[i].price);
-        console.log("totalPrice + markers[i].price > plafon: " + (totalPrice + parseInt(markers[i].price)) > plafon);
+        console.log("totalPrice + markers[i].price > plafond: " + (totalPrice + parseInt(markers[i].price)) > plafond);
         /*****************Prints de debug**************************/
 
         var markerPrice = parseInt(markers[i].price);
-        if ((totalPrice + markerPrice) > plafon)
+        if ((totalPrice + markerPrice) > plafond)
             continue;
-        pricePathMarkers.push({
-            location: markers[i].position,
-            stopover: true
-        });
-        totalPrice += markerPrice;
 
+        if (markers[i].city == initialMarker.city) {
+            pricePathMarkers.push({
+                location: markers[i].position,
+                stopover: true
+            });
+            totalPrice += markerPrice;
+        }
         if (pricePathMarkers.length == 8)
             break;
     }
 
-    calcPlafonPath(pricePathMarkers, initialMarker, endMarker);
+    calcPlafondPath(pricePathMarkers, initialMarker, endMarker);
 }
 
-function calcPlafonPath(pricePathMarkers, initialMarker, endMarker) {
+function calcPlafondPath(pricePathMarkers, initialMarker, endMarker) {
     var directionsService = new google.maps.DirectionsService();
 
     var waypoints = pricePathMarkers;
@@ -161,6 +198,8 @@ function calcPlafonPath(pricePathMarkers, initialMarker, endMarker) {
             directionsDisplay.setDirections(response);
         }
     });
+
+    $('#modalPricePath').modal('hide')
 }
 
 function login() {
@@ -282,12 +321,22 @@ function reverseGeocoding(coords, callback) {
     var geocoder = new google.maps.Geocoder();
     //TODO: corrigir localidade
     geocoder.geocode({'latLng': coords}, function (results, status) {
+
+        console.log(results);
+
         if (status == google.maps.GeocoderStatus.OK) {
             if (results[1]) {
                 //console.log(results);
                 for (var i = 0; i < results.length; i++) {
                     if (results[i].types[0] === "locality") {
                         callback(results[i].address_components[0].short_name);
+                        console.log(results[i].address_components[0].short_name);
+                        break;
+                    }
+                    else if (results[i].types[0] === "administrative_area_level_2") {
+                        callback(results[i].address_components[0].short_name);
+                        console.log(results[i].address_components[0].short_name);
+                        break;
                     }
                 }
             } else {
@@ -711,6 +760,7 @@ function initialize() {
 
         reverseGeocoding(newMarker.position, function (result) {
             formCity.value = result;
+
         })
     });
 
