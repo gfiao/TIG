@@ -162,7 +162,7 @@ function buildPlafondPath(initialID, endID, plafond) {
         if ((totalPrice + markerPrice) > plafond)
             continue;
 
-        if (markers[i].city == initialMarker.city) {
+        if (markers[i].city == initialMarker.city && markers[i].visible) {
             pricePathMarkers.push({
                 location: markers[i].position,
                 stopover: true
@@ -495,6 +495,11 @@ function doNothing() {
 
 function bindInfoWindow(marker, map, infoWindow, html) {
     google.maps.event.addListener(marker, 'click', function () {
+
+        //console.log($(html));
+        //$(html).filter("#modifyButton").css("display", "none");
+        //console.log($(html).filter("#modifyButton"));
+
         infoWindow.setContent(html);
         infoWindow.open(map, marker);
         currentMarker = marker;
@@ -540,6 +545,18 @@ function parseXML(xml) {
         var price = markersXML[i].getAttribute("price");
         var description = markersXML[i].getAttribute("description");
 
+        //var html = "<b>" + name + "</b> <br/>" + type + " <br/>Abertura: " + opening
+        //    + " horas<br/>Fecho: " + closing + " horas";
+        //if (price != 0)
+        //    html += "<br/>Preço: " + price + "€";
+        //if (description != "")
+        //    html += "<br\>Descrição: " + description;
+        //html += '<br\>' +
+        //    '<button type="button" class="btn btn-default" data-toggle="modal" ' +
+        //    'data-target="#myModal" onclick="buildUpdateForm()">' +
+        //    'Modificar' +
+        //    '</button>';
+
         var html = "<b>" + name + "</b> <br/>" + type + " <br/>Abertura: " + opening
             + " horas<br/>Fecho: " + closing + " horas";
         if (price != 0)
@@ -547,9 +564,15 @@ function parseXML(xml) {
         if (description != "")
             html += "<br\>Descrição: " + description;
         html += '<br\>' +
-            '<button type="button" class="btn btn-default" data-toggle="modal" ' +
+            '<button type="button" class="btn btn-default infoWindowButton" data-toggle="modal" ' +
             'data-target="#myModal" onclick="buildUpdateForm()">' +
             'Modificar' +
+            '</button>';
+
+        //html += '<br\>' +
+        html += '<button type="button" id="optimalButton' + id + '" ' +
+            'class="btn btn-default infoWindowButton2" onclick="addToOptimalPath()" deleted="deleted">' +
+            'Adicionar à lista do caminho óptimo' +
             '</button>';
 
         var infoWindow = new google.maps.InfoWindow({
@@ -664,14 +687,14 @@ function initialize() {
             if (description != "")
                 html += "<br\>Descrição: " + description;
             html += '<br\>' +
-                '<button type="button" class="btn btn-default" data-toggle="modal" ' +
+                '<button id="modifyButton" type="button" class="btn btn-default infoWindowButton" data-toggle="modal" ' +
                 'data-target="#myModal" onclick="buildUpdateForm()">' +
                 'Modificar' +
                 '</button>';
 
-            html += '<br\>' +
-                '<button type="button" id="optimalButton' + id + '" ' +
-                'class="btn btn-default" onclick="addToOptimalPath()" deleted="deleted">' +
+            //html += '<br\>' +
+            html += '<button type="button" id="optimalButton' + id + '" ' +
+                'class="btn btn-default infoWindowButton2" onclick="addToOptimalPath()" deleted="deleted">' +
                 'Adicionar à lista do caminho óptimo' +
                 '</button>';
 

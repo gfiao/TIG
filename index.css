@@ -75,7 +75,11 @@ body {
     padding: 1%;
 }
 
-.legendItem{
-    /*padding: 15%;*/
-    /*border: 1px black solid;*/
+.infoWindowButton{
+    margin-right: 15px;
+    margin-top: 10px;
+}
+
+.infoWindowButton2{
+    margin-top: 10px;
 }

@@ -126,7 +126,7 @@
         <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
             <div class="panel-body">
                 <!-- Button trigger modal -->
-                <button type="button" onclick="buildCityPriceForm() " class="btn btn-primary btn-lg" data-toggle="modal"
+                <button type="button" onclick="buildCityPriceForm() " class="btn btn-default btn-lg" data-toggle="modal"
                         data-target="#modalPricePath">
                     Calcular rota
                 </button>
@@ -157,7 +157,7 @@
 
                         </div>
                     </div>
-                    <button type="button" class="btn btn-primary"
+                    <button type="button" class="btn btn-default"
                             onclick="filterByPrice(document.getElementById('priceButton').value)">Filtrar
                     </button>
                 </form>
@@ -349,24 +349,28 @@
                         <select id="selectCity" name="type" class="form-control"> </select>
                     </div>
 
-                    <div class="form-group">
-                        <label for="selectBeginTypes">Tipo Inicio</label>
-                        <select id="selectBeginTypes" name="type" class="form-control"> </select>
+                    <div class="row">
+                        <div class="form-group col-xs-4 col-md-5">
+                            <label for="selectBeginTypes">Tipo Inicio</label>
+                            <select id="selectBeginTypes" name="type" class="form-control"> </select>
+                        </div>
+
+                        <div class="form-group col-xs-4 col-md-5">
+                            <label for="selectBeginMarkers">Local Inicio</label>
+                            <select id="selectBeginMarkers" name="type" class="form-control"> </select>
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="selectBeginMarkers">Local Inicio</label>
-                        <select id="selectBeginMarkers" name="type" class="form-control"> </select>
-                    </div>
+                    <div class="row">
+                        <div class="form-group col-xs-4 col-md-5">
+                            <label for="selectEndTypes">Tipo Final</label>
+                            <select id="selectEndTypes" name="type" class="form-control"> </select>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="selectEndTypes">Tipo Final</label>
-                        <select id="selectEndTypes" name="type" class="form-control"> </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="selectEndMarkers">Local Final</label>
-                        <select id="selectEndMarkers" name="type" class="form-control"> </select>
+                        <div class="form-group col-xs-4 col-md-5">
+                            <label for="selectEndMarkers">Local Final</label>
+                            <select id="selectEndMarkers" name="type" class="form-control"> </select>
+                        </div>
                     </div>
 
                     <label class="sr-only" for="priceButton">Amount (in euros)</label>
