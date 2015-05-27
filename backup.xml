@@ -1,2 +1,32 @@
 <?xml version="1.0"?>
-<markers><marker name="Mosteiro dos Jeronimos" city="Lisboa" lat="38.697937" lng="-9.206243" type="Monumento" price="10" opening="10" closing="18" description="O Mosteiro dos Jeronimos foi declarado Monumento Nacional em 1907."/><marker name="Elevador de Santa Justa" city="Lisboa" lat="38.712128" lng="-9.139151" type="Monumento" price="5" opening="7" closing="22" description="O Elevador de Santa Justa foi inaugurado a 10 de julho de 1902 e e o unico elevador vertical em Lisboa que presta um servico publico."/><marker name="Hostel Bacano" city="Lisboa" lat="38.718330" lng="-9.153328" type="Hostel" price="22" opening="12" closing="22" description="Hostel muito bacano."/><marker name="Hotel mau" city="Lisboa" lat="38.716324" lng="-9.181223" type="Hotel" price="15" opening="12" closing="23" description="Hotel muito mauzinho."/><marker name="Assembleia" city="Lisboa" lat="38.710361" lng="-9.154873" type="Museu" price="0" opening="1" closing="1" description=""/><marker name="Mar" city="Lisboa" lat="38.719200" lng="-9.134359" type="Hotel" price="0" opening="11" closing="1" description=""/><marker name="Hostel fixe e barato" city="Lisboa" lat="38.720276" lng="-9.164314" type="Hostel" price="5" opening="01:00" closing="00:00" description=""/><marker name="Museu de cenas" city="Lisboa" lat="38.721478" lng="-9.138136" type="Hostel" price="15" opening="08:00" closing="20:00" description=""/><marker name="Uma rotunda" city="Lisboa" lat="38.725365" lng="-9.149981" type="Monumento" price="0" opening="" closing="" description=""/><marker name="NAO TINHA NOME" city="Lisboa" lat="38.724224" lng="-9.136248" type="Hostel" price="0" opening="" closing="" description=""/><marker name="Estatua do socio" city="Lisboa" lat="38.727173" lng="-9.141655" type="Monumento" price="0" opening="" closing="" description=""/></markers>
+<markers>
+    <marker name="Mosteiro dos Jeronimos" city="Lisboa" lat="38.697937" lng="-9.206243" type="Monumento" price="10"
+            opening="10" closing="18" description="O Mosteiro dos Jeronimos foi declarado Monumento Nacional em 1907."/>
+    <marker name="Elevador de Santa Justa" city="Lisboa" lat="38.712128" lng="-9.139151" type="Monumento" price="5"
+            opening="7" closing="22"
+            description="O Elevador de Santa Justa foi inaugurado a 10 de julho de 1902 e e o unico elevador vertical em Lisboa que presta um servico publico."/>
+    <marker name="Hostel Bacano" city="Lisboa" lat="38.718330" lng="-9.153328" type="Hostel" price="22" opening="12"
+            closing="22" description="Hostel muito bacano."/>
+    <marker name="Hotel mau" city="Lisboa" lat="38.716324" lng="-9.181223" type="Hotel" price="15" opening="12"
+            closing="23" description="Hotel muito mauzinho."/>
+    <marker name="Assembleia" city="Lisboa" lat="38.710361" lng="-9.154873" type="Museu" price="0" opening="1"
+            closing="1" description=""/>
+    <marker name="Mar" city="Lisboa" lat="38.719200" lng="-9.134359" type="Hotel" price="0" opening="11" closing="1"
+            description=""/>
+    <marker name="Hostel fixe e barato" city="Lisboa" lat="38.720276" lng="-9.164314" type="Hostel" price="5"
+            opening="01:00" closing="00:00" description=""/>
+    <marker name="Museu de cenas" city="Lisboa" lat="38.721478" lng="-9.138136" type="Hostel" price="15" opening="08:00"
+            closing="20:00" description=""/>
+    <marker name="Uma rotunda" city="Lisboa" lat="38.725365" lng="-9.149981" type="Monumento" price="0" opening=""
+            closing="" description=""/>
+    <marker name="NAO TINHA NOME" city="Lisboa" lat="38.724224" lng="-9.136248" type="Hostel" price="0" opening=""
+            closing="" description=""/>
+    <marker name="Estatua do socio" city="Lisboa" lat="38.727173" lng="-9.141655" type="Monumento" price="0" opening=""
+            closing="" description=""/>
+    <marker name="teste insert lisboa" city="Lisboa" lat="38.727440" lng="-9.162426" type="Hostel" price="0" opening=""
+            closing="" description=""/>
+    <marker name="Parque da Paz" city="Almada" lat="38.662525" lng="-9.167490" type="Monumento" price="0" opening=""
+            closing="" description="Parque da Paz em Almada"/>
+    <marker name="dfdgdhgdfdf" city="Coruche" lat="38.820183" lng="-8.601608" type="Hostel" price="0" opening=""
+            closing="" description=""/>
+</markers>

@@ -494,15 +494,18 @@ function doNothing() {
 }
 
 function bindInfoWindow(marker, map, infoWindow, html) {
-
     google.maps.event.addListener(marker, 'click', function () {
-
+        var newHtml = html;
         if (isLoggedIn)
-            html += '<button id="modifyButton" type="button" class="btn btn-default infoWindowButton2" data-toggle="modal" ' +
-                'data-target="#myModal" onclick="buildUpdateForm()">Modificar' +
-                '</button>';
-
-        infoWindow.setContent(html);
+            if ($("#modifyButton" + marker.id).length == 0) {
+                newHtml += '<button ' +
+                    'id="modifyButton"' + marker.id + ' ' +
+                    'type="button" ' +
+                    'class="btn btn-default infoWindowButton2" data-toggle="modal" ' +
+                    'data-target="#myModal" onclick="buildUpdateForm()">Modificar' +
+                    '</button>';
+            }
+        infoWindow.setContent(newHtml);
         infoWindow.open(map, marker);
         currentMarker = marker;
     });
@@ -627,7 +630,6 @@ function backup() {
         }
     });
 }
-
 
 function initialize() {
     var mapOptions = {
