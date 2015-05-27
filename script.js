@@ -494,11 +494,13 @@ function doNothing() {
 }
 
 function bindInfoWindow(marker, map, infoWindow, html) {
+
     google.maps.event.addListener(marker, 'click', function () {
 
-        //console.log($(html));
-        //$(html).filter("#modifyButton").css("display", "none");
-        //console.log($(html).filter("#modifyButton"));
+        if (isLoggedIn)
+            html += '<button id="modifyButton" type="button" class="btn btn-default infoWindowButton2" data-toggle="modal" ' +
+                'data-target="#myModal" onclick="buildUpdateForm()">Modificar' +
+                '</button>';
 
         infoWindow.setContent(html);
         infoWindow.open(map, marker);
@@ -545,32 +547,14 @@ function parseXML(xml) {
         var price = markersXML[i].getAttribute("price");
         var description = markersXML[i].getAttribute("description");
 
-        //var html = "<b>" + name + "</b> <br/>" + type + " <br/>Abertura: " + opening
-        //    + " horas<br/>Fecho: " + closing + " horas";
-        //if (price != 0)
-        //    html += "<br/>Preço: " + price + "€";
-        //if (description != "")
-        //    html += "<br\>Descrição: " + description;
-        //html += '<br\>' +
-        //    '<button type="button" class="btn btn-default" data-toggle="modal" ' +
-        //    'data-target="#myModal" onclick="buildUpdateForm()">' +
-        //    'Modificar' +
-        //    '</button>';
-
         var html = "<b>" + name + "</b> <br/>" + type + " <br/>Abertura: " + opening
             + " horas<br/>Fecho: " + closing + " horas";
         if (price != 0)
             html += "<br/>Preço: " + price + "€";
         if (description != "")
             html += "<br\>Descrição: " + description;
-        html += '<br\>' +
-            '<button type="button" class="btn btn-default infoWindowButton" data-toggle="modal" ' +
-            'data-target="#myModal" onclick="buildUpdateForm()">' +
-            'Modificar' +
-            '</button>';
 
-        //html += '<br\>' +
-        html += '<button type="button" id="optimalButton' + id + '" ' +
+        html += '<br\><button type="button" id="optimalButton' + id + '" ' +
             'class="btn btn-default infoWindowButton2" onclick="addToOptimalPath()" deleted="deleted">' +
             'Adicionar à lista do caminho óptimo' +
             '</button>';
@@ -686,15 +670,9 @@ function initialize() {
                 html += "<br/>Preço: " + price + "€";
             if (description != "")
                 html += "<br\>Descrição: " + description;
-            html += '<br\>' +
-                '<button id="modifyButton" type="button" class="btn btn-default infoWindowButton" data-toggle="modal" ' +
-                'data-target="#myModal" onclick="buildUpdateForm()">' +
-                'Modificar' +
-                '</button>';
 
-            //html += '<br\>' +
-            html += '<button type="button" id="optimalButton' + id + '" ' +
-                'class="btn btn-default infoWindowButton2" onclick="addToOptimalPath()" deleted="deleted">' +
+            html += '<br\><button type="button" id="optimalButton' + id + '" ' +
+                'class="btn btn-default infoWindowButton" onclick="addToOptimalPath()" deleted="deleted">' +
                 'Adicionar à lista do caminho óptimo' +
                 '</button>';
 

@@ -70,16 +70,16 @@ body {
     z-index: 99;
     border: 1px solid grey;
     border-radius: 4px 4px 4px 4px;
-    right:1%;
+    right: 1%;
     top: 5%;
     padding: 1%;
 }
 
-.infoWindowButton{
+.infoWindowButton {
     margin-right: 15px;
     margin-top: 10px;
 }
 
-.infoWindowButton2{
+.infoWindowButton2 {
     margin-top: 10px;
 }
