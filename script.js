@@ -381,22 +381,25 @@ function buildUpdateForm() {
 
     var form = document.getElementById("update");
 
-    var name = form.elements[2];
+    var id = form.elements[2];
+    id.value = currentMarker.id;
+
+    var name = form.elements[3];
     name.value = currentMarker.name;
 
-    var type = form.elements[3];
+    var type = form.elements[4];
     type.value = currentMarker.type;
 
-    var opening = form.elements[5];
+    var opening = form.elements[6];
     opening.value = currentMarker.opening
 
-    var closing = form.elements[6];
+    var closing = form.elements[7];
     closing.value = currentMarker.closing;
 
-    var price = form.elements[7];
+    var price = form.elements[8];
     price.value = currentMarker.price;
 
-    var description = form.elements[8];
+    var description = form.elements[9];
     description.value = currentMarker.description;
 }
 
@@ -496,7 +499,9 @@ function doNothing() {
 function bindInfoWindow(marker, map, infoWindow, html) {
     google.maps.event.addListener(marker, 'click', function () {
         var newHtml = html;
-        if (isLoggedIn)
+
+        //Se estamos loggedIn como Admin e se não quisermos eliminar este marcador
+        if (isLoggedIn && marker.icon != 'http://labs.google.com/ridefinder/images/mm_20_black.png')
             if ($("#modifyButton" + marker.id).length == 0) {
                 newHtml += '<button ' +
                     'id="modifyButton"' + marker.id + ' ' +
@@ -516,8 +521,8 @@ function deleteMarker(marker, map, infoWindow, form) {
         $("#del").css("display", "inline");
         marker.setIcon('http://labs.google.com/ridefinder/images/mm_20_black.png');
 
-        var namePost = form.elements[0];
-        namePost.value = marker.name;
+        var idPost = form.elements[0];
+        idPost.value = marker.id;
 
         bindInfoWindow(marker, map, infoWindow, form);
     });
@@ -538,10 +543,10 @@ function parseXML(xml) {
     console.log(xml);
     var markersXML = xml.documentElement.getElementsByTagName("marker");
     for (var i = 0; i < markersXML.length; i++) {
+        var id = markersXML[i].getAttribute("id");
         var city = markersXML[i].getAttribute("city");
         var name = markersXML[i].getAttribute("name");
         var type = markersXML[i].getAttribute("type");
-        var city = markersXML[i].getAttribute("city");
         var opening = markersXML[i].getAttribute("opening");
         var closing = markersXML[i].getAttribute("closing");
         var point = new google.maps.LatLng(
@@ -584,6 +589,7 @@ function parseXML(xml) {
             image = 'http://labs.google.com/ridefinder/images/mm_20_white.png';
 
         var marker = new google.maps.Marker({
+            id: id,
             visible: true,
             map: globalmap,
             position: point,
@@ -601,9 +607,10 @@ function parseXML(xml) {
         deleteMarker(marker, globalmap, infoWindow, document.getElementById("del"));
 
         $.ajax({
-            url: 'insert.php',
+            url: 'import.php',
             type: 'post',
             data: {
+                "id": id,
                 "type": type,
                 "city": city,
                 "name": name,
@@ -642,7 +649,7 @@ function initialize() {
     };
 
     var infoWindow = new google.maps.InfoWindow({
-        content: "Diversas cenas!"
+        content: "Conteudo placeholder!Não é suposto aparecer."
     });
 
     var form = document.getElementById("del");

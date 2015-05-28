@@ -7,9 +7,9 @@ if (!$con)
 
 mysql_select_db("projecto", $con);
 
-mysql_query("DELETE FROM markers WHERE name='$_POST[name]'");
+mysql_query("DELETE FROM markers WHERE id='$_POST[id]'");
 
 mysql_close($con);
 
-header('location: http://localhost/TIG_Projecto/index.html');
+header('location: http://localhost/TIG/index.html');
 ?>
