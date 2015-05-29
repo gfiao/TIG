@@ -357,6 +357,7 @@ function geocoding(adress, callback) {
             alert('Geocode was not successful for the following reason: ' + status);
         }
     });
+    globalmap.setZoom(13);
 }
 
 function buildInsertForm() {
