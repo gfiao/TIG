@@ -555,8 +555,13 @@ function parseXML(xml) {
         var price = markersXML[i].getAttribute("price");
         var description = markersXML[i].getAttribute("description");
 
-        var html = "<b>" + name + "</b> <br/>" + type + " <br/>Abertura: " + opening
-            + " horas<br/>Fecho: " + closing + " horas";
+        var html = "<b>" + name + "</b> <br/>"
+            + type + " <br/>";
+
+        if (opening != null)
+            html += "Abertura: " + opening + " horas<br/>";
+        if (closing != null)
+            html += "Fecho: " + closing + " horas";
         if (price != 0)
             html += "<br/>Preço: " + price + "€";
         if (description != "")
@@ -673,12 +678,20 @@ function initialize() {
             var price = markersXML[i].getAttribute("price");
             var description = markersXML[i].getAttribute("description");
 
-            var html = "<b>" + name + "</b> <br/>" + type + " <br/>Abertura: " + opening
-                + " horas<br/>Fecho: " + closing + " horas";
+            //Se não tiver descrição, definimos uma default
+            if (description == "")
+                description = "Este local não tem mais informações."
+
+            var html = "<b>" + name + "</b> <br/>"
+                + type;
+            if (opening != "")
+                html += " <br/> Abertura: " + opening + " horas<br/>";
+            if (closing != "")
+                html += "Fecho: " + closing + " horas";
+
             if (price != 0)
                 html += "<br/>Preço: " + price + "€";
-            if (description != "")
-                html += "<br\>Descrição: " + description;
+            html += "<br\>Descrição: " + description;
 
             html += '<br\><button type="button" id="optimalButton' + id + '" ' +
                 'class="btn btn-default infoWindowButton" onclick="addToOptimalPath()" deleted="deleted">' +
@@ -723,7 +736,7 @@ function initialize() {
             bindInfoWindow(marker, map, infoWindow, html);
             deleteMarker(marker, map, infoWindow, form);
         }
-        buildCitySelect();
+
         //change display of the menus
         $("#newMarker, #advancedFunctions").hide();
     });
@@ -742,6 +755,7 @@ function initialize() {
         for (var i = 0; i < citiesXML.length; i++) {
             cities.push(citiesXML[i].getAttribute("city"));
         }
+        buildCitySelect();
     });
 
     google.maps.event.addListener(map, 'click', function (event) {
@@ -790,6 +804,7 @@ function initialize() {
             }
         }
     });
+
 
     citySelectChange();
     selectBeginTypeChange();
