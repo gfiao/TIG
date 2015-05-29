@@ -519,6 +519,9 @@ function bindInfoWindow(marker, map, infoWindow, html) {
 
 function deleteMarker(marker, map, infoWindow, form) {
     google.maps.event.addListener(marker, 'dblclick', function () {
+        if (!isLoggedIn)
+            return;
+
         $("#del").css("display", "inline");
         marker.setIcon('http://labs.google.com/ridefinder/images/mm_20_black.png');
 
