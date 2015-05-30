@@ -159,14 +159,6 @@ function buildPlafondPath(initialID, endID, plafond) {
     var pricePathMarkers = [];
 
     for (var i = 0; i < markers.length; i++) {
-
-        /*****************Prints de debug**************************
-         console.log("plafond: " + plafond);
-         console.log("totalPrice: " + totalPrice);
-         console.log("preço do marcador: " + markers[i].price);
-         console.log("totalPrice + markers[i].price > plafond: " + (totalPrice + parseInt(markers[i].price)) > plafond);
-         *****************Prints de debug**************************/
-
         var markerPrice = parseInt(markers[i].price);
         if ((totalPrice + markerPrice) > plafond)
             continue;
@@ -195,7 +187,6 @@ function calcPlafondPath(pricePathMarkers, initialMarker, endMarker) {
     var directionsService = new google.maps.DirectionsService();
 
     var waypoints = pricePathMarkers;
-    console.log("waypoints: " + waypoints);
 
     var start = initialMarker;
     var end = endMarker;
@@ -335,7 +326,6 @@ function addToOptimalPath() {
 function removeFromOptimalPath(optionsToRemove) {
     removeFromArray(optimalPathPoints, optionsToRemove);
     $("#optimal-path :selected").remove();
-    console.log(optimalPathPoints);
 }
 
 /*
@@ -349,7 +339,6 @@ function reverseGeocoding(coords, callback) {
 
         if (status == google.maps.GeocoderStatus.OK) {
             if (results[1]) {
-                //console.log(results);
                 for (var i = 0; i < results.length; i++) {
                     if (results[i].types[0] === "locality") {
                         callback(results[i].address_components[0].short_name);
@@ -436,7 +425,6 @@ function buildUpdateForm() {
 }
 
 function buildCitySelect() {
-    console.log(cities);
     for (var i = 0; i < cities.length; i++)
         $('#city-select').append($('<option>', {
             text: String(cities[i]),
@@ -546,7 +534,6 @@ function doNothing() {
 function bindInfoWindow(marker, map, infoWindow, html) {
     google.maps.event.addListener(marker, 'click', function () {
         var newHtml = html;
-        console.log(markers.length);
         /*
          If the user is loggedIn and if the marker is not meant to be deleted, then we had
          the modify button that open up the modifiy menu where the admin can edit a marker
@@ -602,7 +589,6 @@ function loadXML() {
  This function parses a xml file, and adds the new marker to the DB
  */
 function parseXML(xml) {
-    console.log(xml);
     var markersXML = xml.documentElement.getElementsByTagName("marker");
     for (var i = 0; i < markersXML.length; i++) {
         var id = markersXML[i].getAttribute("id");
