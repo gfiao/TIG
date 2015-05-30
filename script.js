@@ -1,30 +1,32 @@
+//This variable allows us to access google maps API methods in the autocomplete feature
 var google = google || {};
 
-var isLoggedIn = false;
 
+/*Global Variables*/
+
+var isLoggedIn = false;
 var globalmap;
 var globalPrice = Number.MAX_VALUE;
 //this array stores the xml constructed by xmloutdom.php
 var markersXML = [];
 
-//this array stores the markers as a marker object
-var markers = [];
-
 var directionsDisplay;
 
+//this array stores the markers as a marker object
+var markers = [];
 var types = [];
-
 var cities = [];
-
 var optimalPathPoints = [];
 
 var newMarker = null;
-
 var currentMarker = null;
 
+/*
+ The next functions are used to populate and control the cheapest path menu
+ */
 function populateTypesDropdown(parent) {
     var types = [];
-    //Popular as dropdowns dos tipos
+    //Populates the types dropdown
     for (var i = 0; i < markers.length; i++)
         if (markers[i].city == parent && !existsIn(types, markers[i].type))
             types.push(markers[i].type);
@@ -33,25 +35,22 @@ function populateTypesDropdown(parent) {
     list(types, 'selectEnd');
 }
 
+//Inicializes the cheapest path drodowns menu
 function initPriceModal() {
-    //Popular as dropdowns com valores default
+    //Populates the dropdowns with default values
     $('#selectCity').val("Lisboa");
     var city = "Lisboa";
 
-    //preencher tipoInicio
-    //preencher tipoFinal
     populateTypesDropdown(city);
 
-    //preencher pontoInicio
     var beginType = $('#selectBeginTypes').val();
     populateBeginMarkersDropdown(beginType, city);
-    //preencher pontoFinal
+
     var endType = $('#selectEndTypes').val();
     populateEndMarkersDropdown(endType, city);
-
 }
 
-//Este método é chamado quando carregamos no botao do modal
+//This function is called when we press the "Calcular rota" button in the cheapest path
 function buildCityPriceForm() {
     if ($('#selectCity option').length == 0)
         for (var i = 0; i < cities.length; i++) {
@@ -64,6 +63,7 @@ function buildCityPriceForm() {
     initPriceModal();
 }
 
+//Listener that checks if the uesr changes the city when building the cheapest path
 function citySelectChange() {
     $('#selectCity').change(function () {
         var parent = $(this).val();
@@ -88,14 +88,6 @@ function populateBeginMarkersDropdown(type, city) {
     $('#selectBeginMarkers').val(ids[0]);
 }
 
-function selectBeginTypeChange() {
-    $('#selectBeginTypes').change(function () {
-        var city = $('#selectCity').val();
-        var type = $(this).val();
-        populateBeginMarkersDropdown(type, city);
-    });
-}
-
 function populateEndMarkersDropdown(type, city) {
     var names = [];
     var ids = [];
@@ -112,6 +104,17 @@ function populateEndMarkersDropdown(type, city) {
     });
     $('#selectEndMarkers').val(ids[0]);
 }
+
+//Listener that checks if the user changed the "Type" dropdown and changes the corresponding markers dropdown
+function selectBeginTypeChange() {
+    $('#selectBeginTypes').change(function () {
+        var city = $('#selectCity').val();
+        var type = $(this).val();
+        populateBeginMarkersDropdown(type, city);
+    });
+}
+
+//Listener that checks if the user changed the "Type" dropdown and changes the corresponding markers dropdown
 function selectEndTypeChange() {
     $('#selectEndTypes').change(function () {
         var city = $('#selectCity').val();
@@ -135,6 +138,12 @@ function list(array_list, selectId) {
         populateEndMarkersDropdown(array_list[0], $('#selectCity').val());
 }
 
+/*
+ Function that calculates the cheapest path based on a set price, an initial and end marker.
+ initialID - The id of the marker where the path will start
+ endID - The id of the marker where the path will end
+ plafond - Max total price of all the path markers
+ */
 function buildPlafondPath(initialID, endID, plafond) {
     //TODO falta receber os dados como deve de ser
     if (plafond <= 0)
@@ -151,12 +160,12 @@ function buildPlafondPath(initialID, endID, plafond) {
 
     for (var i = 0; i < markers.length; i++) {
 
-        /*****************Prints de debug**************************/
-        console.log("plafond: " + plafond);
-        console.log("totalPrice: " + totalPrice);
-        console.log("preço do marcador: " + markers[i].price);
-        console.log("totalPrice + markers[i].price > plafond: " + (totalPrice + parseInt(markers[i].price)) > plafond);
-        /*****************Prints de debug**************************/
+        /*****************Prints de debug**************************
+         console.log("plafond: " + plafond);
+         console.log("totalPrice: " + totalPrice);
+         console.log("preço do marcador: " + markers[i].price);
+         console.log("totalPrice + markers[i].price > plafond: " + (totalPrice + parseInt(markers[i].price)) > plafond);
+         *****************Prints de debug**************************/
 
         var markerPrice = parseInt(markers[i].price);
         if ((totalPrice + markerPrice) > plafond)
@@ -176,6 +185,12 @@ function buildPlafondPath(initialID, endID, plafond) {
     calcPlafondPath(pricePathMarkers, initialMarker, endMarker);
 }
 
+/*
+ Function that calculates the cheapest path using the google maps API
+ pricePathMarkers - array with the middle markers
+ initialMarker - marker where the path starts
+ endMarker - marker where the path ends
+ */
 function calcPlafondPath(pricePathMarkers, initialMarker, endMarker) {
     var directionsService = new google.maps.DirectionsService();
 
@@ -216,13 +231,11 @@ function login() {
             "password": password
         },
         success: function (response) {
-            //console.log(response);
-            if (response == "")
-                alert("Username ou password errado!");
-            else {
-                //  alert("Seja bem-vindo!");
+            if (response != "") {
+                //If authentication is successful, show the admin interface
                 createAdminInterface();
-            }
+            } else
+                alert("Username ou password errado!");
         }
     });
 }
@@ -231,13 +244,15 @@ function createAdminInterface() {
     if (newMarker != null)
         removeNewMarker();
 
+    //Admin is now logged in
     isLoggedIn = true;
 
-    //close modal
+    //Close modal
     $("#loginModal").modal("hide");
 
-    //change buttons
+    //Hide the login button
     $("#login-button").hide();
+    //Show the logout button
     $("#logout-button").show();
 
     //change display of the menus
@@ -248,14 +263,19 @@ function createAdminInterface() {
 function logout() {
     isLoggedIn = false;
 
-    //change buttons
+    //Show the login button
     $("#login-button").show();
+    //Hide the logout button
     $("#logout-button").hide();
 
     //change display of the menus
     $("#newMarker, #advancedFunctions").hide();
 }
 
+/*
+ Calculates the optimal path using the google maps api
+ https://developers.google.com/maps/documentation/javascript/examples/directions-waypoints
+ */
 function calcOptimalPath() {
     var directionsService = new google.maps.DirectionsService();
 
@@ -287,12 +307,15 @@ function calcOptimalPath() {
     });
 }
 
+/*
+ This function is called when the user clicks on the "Adicionar à lista do caminho óptimo"
+ and adds the current marker to the optimalPathPoints array,
+ and if the point is already in the array, the button becomes disabled
+ */
 function addToOptimalPath() {
     if (optimalPathPoints.length != 8) {
         if (!existsIn(optimalPathPoints, currentMarker))
             $("#optimalButton" + currentMarker.id).prop("disabled", false);
-
-        console.log("clickei neste socio! " + currentMarker.id);
 
         if (!existsIn(optimalPathPoints, currentMarker)) {
             optimalPathPoints.push(currentMarker);
@@ -302,27 +325,27 @@ function addToOptimalPath() {
                 text: currentMarker.name
             }));
         }
-
-        console.log(optimalPathPoints);
-
-
         $("#optimalButton" + currentMarker.id).prop("disabled", true);
     }
 }
 
+/*
+ Removes a marker from the html optimal path list
+ */
 function removeFromOptimalPath(optionsToRemove) {
-    console.log(optionsToRemove);
     removeFromArray(optimalPathPoints, optionsToRemove);
     $("#optimal-path :selected").remove();
     console.log(optimalPathPoints);
 }
 
+/*
+ Function that given a set of coordinates, returns the name of the city on those coordinates.
+ Uses the google maps API
+ https://developers.google.com/maps/documentation/javascript/examples/geocoding-simple
+ */
 function reverseGeocoding(coords, callback) {
     var geocoder = new google.maps.Geocoder();
-    //TODO: corrigir localidade
     geocoder.geocode({'latLng': coords}, function (results, status) {
-
-        console.log(results);
 
         if (status == google.maps.GeocoderStatus.OK) {
             if (results[1]) {
@@ -330,12 +353,10 @@ function reverseGeocoding(coords, callback) {
                 for (var i = 0; i < results.length; i++) {
                     if (results[i].types[0] === "locality") {
                         callback(results[i].address_components[0].short_name);
-                        console.log(results[i].address_components[0].short_name);
                         break;
                     }
                     else if (results[i].types[0] === "administrative_area_level_2") {
                         callback(results[i].address_components[0].short_name);
-                        console.log(results[i].address_components[0].short_name);
                         break;
                     }
                 }
@@ -348,9 +369,14 @@ function reverseGeocoding(coords, callback) {
     });
 }
 
-function geocoding(adress, callback) {
+/*
+ Function that given a city, returns the coordinates where that city is located and sets the center of the map
+ in that location
+ https://developers.google.com/maps/documentation/javascript/examples/geocoding-simple
+ */
+function geocoding(address, callback) {
     var geocoder = new google.maps.Geocoder();
-    geocoder.geocode({'address': String(adress)}, function (results, status) {
+    geocoder.geocode({'address': String(address)}, function (results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
             callback(globalmap.setCenter(results[0].geometry.location));
         } else {
@@ -360,6 +386,9 @@ function geocoding(adress, callback) {
     globalmap.setZoom(13);
 }
 
+/*
+ Builds the insert form
+ */
 function buildInsertForm() {
     if ($('#select-type option').length == 0)
         for (var i = 0; i < types.length; i++) {
@@ -370,6 +399,9 @@ function buildInsertForm() {
         }
 }
 
+/*
+ Builds the update form
+ */
 function buildUpdateForm() {
     if ($('#select-type-update option').length == 0)
         for (var i = 0; i < types.length; i++) {
@@ -378,7 +410,6 @@ function buildUpdateForm() {
                 value: types[i]
             }));
         }
-    console.log(currentMarker);
 
     var form = document.getElementById("update");
 
@@ -413,13 +444,15 @@ function buildCitySelect() {
         }));
 }
 
-//checks if newMarker is null or not
-//to be called in the html
+/*
+ Removes the newMarker from tha map, if the admin cancels the add new marker action
+ */
 function removeNewMarker() {
     newMarker.setMap(null);
     newMarker = null;
     checkNewMarker();
 }
+
 
 function checkNewMarker() {
     if (newMarker == null) {
@@ -433,6 +466,9 @@ function checkNewMarker() {
     }
 }
 
+/*
+ Filters the markers by price
+ */
 function filterByPrice(price) {
     if (price <= 0)
         globalPrice = Number.MAX_VALUE;
@@ -453,6 +489,9 @@ function filterByPrice(price) {
     }
 }
 
+/*
+ Checks if obj exists in array
+ */
 function existsIn(array, obj) {
     for (var i = 0; i < array.length; i++) {
         if (array[i] == obj)
@@ -461,6 +500,9 @@ function existsIn(array, obj) {
     return false;
 }
 
+/*
+ Removes the elements in ids from the array "array"
+ */
 function removeFromArray(array, ids) {
     for (var i = 0; i < array.length; i++)
         for (var j = 0; j < ids.length; j++)
@@ -468,6 +510,9 @@ function removeFromArray(array, ids) {
                 array.splice(i, 1);
 }
 
+/*
+ Extends the zoom to encompass all the markers
+ */
 function fullextent() {
     var bounds = new google.maps.LatLngBounds();
     for (var i = 0; i < markers.length; i++) {
@@ -501,8 +546,11 @@ function doNothing() {
 function bindInfoWindow(marker, map, infoWindow, html) {
     google.maps.event.addListener(marker, 'click', function () {
         var newHtml = html;
-
-        //Se estamos loggedIn como Admin e se não quisermos eliminar este marcador
+        console.log(markers.length);
+        /*
+         If the user is loggedIn and if the marker is not meant to be deleted, then we had
+         the modify button that open up the modifiy menu where the admin can edit a marker
+         */
         if (isLoggedIn && marker.icon != 'http://labs.google.com/ridefinder/images/mm_20_black.png')
             if ($("#modifyButton" + marker.id).length == 0) {
                 newHtml += '<button ' +
@@ -518,6 +566,10 @@ function bindInfoWindow(marker, map, infoWindow, html) {
     });
 }
 
+/*
+ Listener that deletes a marker when the user double clicks on it
+ Only works if the admin is logged in
+ */
 function deleteMarker(marker, map, infoWindow, form) {
     google.maps.event.addListener(marker, 'dblclick', function () {
         if (!isLoggedIn)
@@ -533,10 +585,12 @@ function deleteMarker(marker, map, infoWindow, form) {
     });
 }
 
+/*
+ Loads a xml file from the website
+ This function is used to import a set o points
+ */
 function loadXML() {
-
     var file = $('#xml_file').prop("files")[0].name;
-
     $.ajax({
         url: file,
         dataType: "xml",
@@ -544,6 +598,9 @@ function loadXML() {
     });
 }
 
+/*
+ This function parses a xml file, and adds the new marker to the DB
+ */
 function parseXML(xml) {
     console.log(xml);
     var markersXML = xml.documentElement.getElementsByTagName("marker");
@@ -612,7 +669,8 @@ function parseXML(xml) {
             price: price,
             description: description
         });
-        markers.push(marker);
+        if (existsIn(markers, marker))
+            markers.push(marker);
         bindInfoWindow(marker, globalmap, infoWindow, html);
         deleteMarker(marker, globalmap, infoWindow, document.getElementById("del"));
 
@@ -632,12 +690,15 @@ function parseXML(xml) {
                 "description": description
             },
             success: function (response) {
-                alert(response);
+                //alert(response);
             }
         });
     }
 }
 
+/*
+ Creates a .xml file with all the points on the map
+ */
 function backup() {
     $.ajax({
         url: 'xmlbackup.php',
@@ -794,6 +855,7 @@ function initialize() {
     });
 
     //filters for the types of interest points
+    //https://stackoverflow.com/questions/26350558/hide-dynamic-google-map-markers-with-checkbox-selection (last answer)
     $(":checkbox").change(function toggleGroup() {
         var id = this.id;
         if ($('#' + id).is(':checked')) {
