@@ -1,5 +1,5 @@
 <?php
 $username="root";
 $password="root";
-$database="projecto";
+$database="projecto_tig";
 ?>

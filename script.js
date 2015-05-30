@@ -405,6 +405,7 @@ function buildUpdateForm() {
 }
 
 function buildCitySelect() {
+    console.log(cities);
     for (var i = 0; i < cities.length; i++)
         $('#city-select').append($('<option>', {
             text: String(cities[i]),
